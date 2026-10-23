@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { Check } from "lucide-react";
+import { ArrowUpRight, Check } from "lucide-react";
 import { useSeo, breadcrumbLd, creativeWorkLd, crumbs } from "../lib/seo";
 import { getProject } from "../data/projects";
 import { getArticle } from "../data/insights";
@@ -52,6 +52,12 @@ function Detail({ p }) {
             <Reveal className="pside__mock">
               <Mockup project={p} />
               <p>{p.shot ? "Homepage of the delivered website." : "Illustrative mockup — not a product screenshot."}</p>
+              {p.live && (
+                <a href={p.live} className="alink" target="_blank" rel="noopener noreferrer">
+                  Visit the live website <ArrowUpRight size={16} aria-hidden="true" />
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              )}
             </Reveal>
             <Reveal delay={80} className="card spot panel">
               <h2 className="h-small">Technology</h2>
