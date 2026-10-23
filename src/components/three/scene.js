@@ -691,9 +691,12 @@ export function mount(canvas, kind) {
   renderer.debug.checkShaderErrors = false; // skips a compile-status round trip and the driver's precision chatter
 
   const scene = new Scene();
-  const pmrem = new PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.55; // keep brand colours saturated instead of washed out
+  // reflections for the glossy scenes; morph is only points and skips the (~0.5s) environment bake
+  const pmrem = kind === "morph" ? null : new PMREMGenerator(renderer);
+  if (pmrem) {
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environmentIntensity = 0.55; // keep brand colours saturated instead of washed out
+  }
   const sun = new DirectionalLight(0xffffff, 2.2);
   sun.position.set(4, 7, 8);
   scene.add(sun, new AmbientLight(0xffffff, 0.5));
@@ -755,8 +758,8 @@ export function mount(canvas, kind) {
         o.material?.map?.dispose();
         o.material?.dispose();
       });
-      scene.environment.dispose();
-      pmrem.dispose();
+      scene.environment?.dispose();
+      pmrem?.dispose();
       renderer.dispose();
     },
   };
