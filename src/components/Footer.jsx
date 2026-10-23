@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
-import { CONTACT, NAV, whatsappLink } from "../data/site";
+import { CONTACT, NAV, SOCIAL, whatsappLink } from "../data/site";
 import { services } from "../data/services";
 import { useScrollProgress } from "../lib/motion";
 import { Logo, Marquee, Reveal } from "./ui";
@@ -57,6 +57,13 @@ export default function Footer() {
             <li className="footer__loc">
               <MapPin size={16} aria-hidden="true" /> {CONTACT.location}
             </li>
+          </ul>
+          <ul className="footer__social" aria-label="Codefloor IT on social media">
+            {SOCIAL.map((s) => (
+              <li key={s.label}>
+                <a href={s.href} target="_blank" rel="noopener noreferrer">{s.label}<span className="sr-only"> (opens in a new tab)</span></a>
+              </li>
+            ))}
           </ul>
         </Reveal>
       </div>

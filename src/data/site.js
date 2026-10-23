@@ -6,6 +6,13 @@ export const CONTACT = {
   location: "Ahmedabad, Gujarat, India",
 };
 
+/* Keep in step with "sameAs" in index.html. */
+export const SOCIAL = [
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/codefloor-it-tech-b04a0b3b9" },
+  { label: "Instagram", href: "https://www.instagram.com/codefloorit/" },
+  { label: "Facebook", href: "https://www.facebook.com/people/Codefloorit/61584261223251/" },
+];
+
 /** WhatsApp chat link, optionally with a pre-filled message. */
 export const whatsappLink = (text) =>
   `https://wa.me/${CONTACT.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
