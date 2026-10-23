@@ -311,6 +311,8 @@ main:focus { outline: none; }
   transition: background-size 0.35s var(--ease);
 }
 .alink svg { flex: none; transition: transform 0.3s var(--ease); }
+/* 44px tap target without moving the layout; the underline stays under the text */
+a.alink { padding-block: 9px; margin-block: -9px; background-origin: content-box; }
 a.alink:hover, .card:hover span.alink { background-size: 100% 1.5px; }
 a.alink:hover svg, .card:hover span.alink svg { transform: translateX(4px); }
 
@@ -786,6 +788,7 @@ html:not(.anim) .shead__line { transform: none; }
 .mock__bar i { width: 7px; height: 7px; border-radius: 50%; background: #b3c3d4; }
 .mock__bar span { flex: 1; height: 10px; margin-left: 8px; border-radius: 5px; background: #fff; }
 .mock__body { height: calc(100% - 26px); overflow: hidden; }
+.mock__shot { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 /* Two screens tall; scrolls down and back like a site on a demo screen. Plays on card hover,
    in the active work panel and on case-study pages. The reduced-motion block turns it off. */
 .mock__page { display: grid; grid-template-rows: 1fr 1fr; height: 200%; animation: mock-scroll 8s ease-in-out infinite alternate paused; }
@@ -845,7 +848,7 @@ html:not(.anim) .shead__line { transform: none; }
   border-radius: 7px;
   background: rgb(16 36 58 / 0.82);
   color: #fff;
-  font-size: 0.7rem;
+  font-size: 0.8125rem;
   font-weight: 500;
 }
 .pcard__go {
@@ -1450,6 +1453,16 @@ html:not(.anim) .shead__line { transform: none; }
 .hv__zone--hand-l, .hv__zone--hand-r { top: 71%; width: 18%; height: 14%; border-radius: 50%; }
 .hv__zone--hand-l { left: 12%; }
 .hv__zone--hand-r { left: 70%; }
+/* the small zones shrink with the robot on phones; keep at least a 44px hit area around their centre */
+.hv__zone--antenna::before, .hv__zone--hand-l::before, .hv__zone--hand-r::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+}
 .hv__say {
   position: absolute;
   top: -15%;

@@ -11,11 +11,15 @@ export const SeoSink = createContext(null);
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
-function resolve({ title, description, path = "/", type = "website", pageType, jsonLd, noindex }) {
+const OG_ALT = `${SITE_NAME} — web and software development company in Ahmedabad`;
+
+/* `image` is a site path to a 1200x630 PNG (e.g. /og/<slug>.png); pages without one share og.png. */
+function resolve({ title, description, path = "/", type = "website", pageType, jsonLd, noindex, image }) {
   const fullTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
   const blocks = Array.isArray(jsonLd) ? [...jsonLd] : jsonLd ? [jsonLd] : [];
   if (pageType) blocks.unshift(pageLd(pageType, { title: fullTitle, description, path }));
-  return { fullTitle, description, url: `${SITE_URL}${path}`, type, blocks, noindex };
+  const img = image ? `${SITE_URL}${image}` : OG_IMAGE;
+  return { fullTitle, description, url: `${SITE_URL}${path}`, type, blocks, noindex, img, imgAlt: image ? title : OG_ALT };
 }
 
 /** Head markup for one page — used by the prerender script. */
@@ -31,11 +35,11 @@ export function headHtml(cfg) {
     `<meta property="og:title" content="${esc(s.fullTitle)}" />`,
     `<meta property="og:description" content="${esc(s.description)}" />`,
     `<meta property="og:url" content="${s.url}" />`,
-    `<meta property="og:image" content="${OG_IMAGE}" />`,
-    `<meta property="og:image:alt" content="${SITE_NAME} — web and software development company in Ahmedabad" />`,
+    `<meta property="og:image" content="${s.img}" />`,
+    `<meta property="og:image:alt" content="${esc(s.imgAlt)}" />`,
     `<meta name="twitter:title" content="${esc(s.fullTitle)}" />`,
     `<meta name="twitter:description" content="${esc(s.description)}" />`,
-    `<meta name="twitter:image" content="${OG_IMAGE}" />`,
+    `<meta name="twitter:image" content="${s.img}" />`,
     ...s.blocks.map((b) => `<script type="application/ld+json" data-seo="1">${JSON.stringify(b).replace(/</g, "\\u003c")}</script>`),
   ].join("\n    ");
 }
@@ -65,6 +69,9 @@ export function useSeo(cfg) {
     setMeta("property", "og:title", s.fullTitle);
     setMeta("property", "og:description", s.description);
     setMeta("property", "og:url", s.url);
+    setMeta("property", "og:image", s.img);
+    setMeta("property", "og:image:alt", s.imgAlt);
+    setMeta("name", "twitter:image", s.img);
     setMeta("name", "twitter:title", s.fullTitle);
     setMeta("name", "twitter:description", s.description);
     document.head.querySelector('link[rel="canonical"]')?.setAttribute("href", s.url);
@@ -152,13 +159,13 @@ export function serviceLd({ name, description, path }) {
   };
 }
 
-export function articleLd({ title, description, path, date }) {
+export function articleLd({ title, description, path, date, image }) {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: title,
     description,
-    image: OG_IMAGE,
+    image: image ? `${SITE_URL}${image}` : OG_IMAGE,
     inLanguage: "en-IN",
     datePublished: date,
     dateModified: date,

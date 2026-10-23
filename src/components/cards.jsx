@@ -51,9 +51,19 @@ export function SolutionCard({ solution, index }) {
   );
 }
 
-/** Illustrative layout mockup. Deliberately abstract: it is not a product screenshot.
-    The page is two screens tall; CSS scrolls it like a site being browsed (see .mock__page). */
-export function Mockup({ scene }) {
+/** A project's visual: its real screenshot in a browser frame, or — without one — an
+    illustrative layout mockup, deliberately abstract so it is not mistaken for the product.
+    The mockup page is two screens tall; CSS scrolls it like a site being browsed (see .mock__page). */
+export function Mockup({ project: { scene, shot, title } }) {
+  if (shot)
+    return (
+      <div className={`mock mock--${scene}`}>
+        <div className="mock__bar" aria-hidden="true"><i /><i /><i /><span /></div>
+        <div className="mock__body">
+          <img className="mock__shot" src={shot} width="1400" height="671" alt={`${title} website homepage`} loading="lazy" decoding="async" />
+        </div>
+      </div>
+    );
   const health = scene === "healthcare";
   return (
     <div className={`mock mock--${scene}`} aria-hidden="true">
@@ -96,8 +106,8 @@ export function ProjectCard({ project, index }) {
   return (
     <Reveal as="article" delay={(index % 3) * 90} className={`card spot pcard pcard--${project.scene}`} from="scale">
       <div className="pcard__media">
-        <Mockup scene={project.scene} />
-        <span className="pcard__tag">Illustrative mockup</span>
+        <Mockup project={project} />
+        {!project.shot && <span className="pcard__tag">Illustrative mockup</span>}
         <span className="pcard__go" aria-hidden="true"><ArrowUpRight size={20} /></span>
       </div>
       <div className="pcard__body">

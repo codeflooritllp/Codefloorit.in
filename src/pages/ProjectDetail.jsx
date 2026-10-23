@@ -50,8 +50,8 @@ function Detail({ p }) {
 
           <aside className="pside">
             <Reveal className="pside__mock">
-              <Mockup scene={p.scene} />
-              <p>Illustrative mockup — not a product screenshot.</p>
+              <Mockup project={p} />
+              <p>{p.shot ? "Homepage of the delivered website." : "Illustrative mockup — not a product screenshot."}</p>
             </Reveal>
             <Reveal delay={80} className="card spot panel">
               <h2 className="h-small">Technology</h2>

@@ -56,15 +56,17 @@ function Detail({ a }) {
   const service = getService(a.relatedService);
   const project = a.relatedProject && getProject(a.relatedProject);
   const related = a.related.map(getArticle).filter(Boolean);
+  const image = `/og/${a.slug}.png`; // drawn by scripts/og-images.py
 
   useSeo({
     title: a.seoTitle,
     description: a.description,
     path,
     type: "article",
+    image,
     jsonLd: [
       breadcrumbLd(trail),
-      articleLd({ title: a.title, description: a.description, path, date: a.date }),
+      articleLd({ title: a.title, description: a.description, path, date: a.date, image }),
       ...(a.faqs?.length ? [faqLd(a.faqs)] : []),
     ],
   });

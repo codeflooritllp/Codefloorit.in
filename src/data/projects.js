@@ -3,6 +3,7 @@
  *   "Completed"       — delivered and in use
  *   "In Development"  — actively being built, not a live production system
  *   "Upcoming"        — planned, not started
+ * `shot` is a real screenshot (1400px wide, in public/work/); without one the card shows an illustrative mockup.
  */
 
 export const projects = [
@@ -14,6 +15,7 @@ export const projects = [
     filters: ["web"],
     status: "Completed",
     scene: "legal",
+    shot: "/work/oracle-legal-consultancy-website-homepage.webp",
     order: 1,
     summary:
       "A professional digital platform for a legal consultancy — a credible online presence with structured content and admin-managed information.",
@@ -78,6 +80,7 @@ export const projects = [
     filters: ["web", "software"],
     status: "Completed",
     scene: "hotel",
+    shot: "/work/aranya-palace-resort-website-homepage.webp",
     order: 2,
     summary:
       "A hotel and hospitality platform giving guests an engaging digital experience while supporting booking and management operations.",

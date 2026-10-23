@@ -19,7 +19,11 @@ export default function Navbar() {
     if (!open) return;
     const onKey = (e) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    document.documentElement.style.overflow = "hidden"; // the page behind the menu stays put
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.documentElement.style.overflow = "";
+    };
   }, [open]);
 
   return (

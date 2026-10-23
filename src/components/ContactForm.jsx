@@ -37,9 +37,13 @@ export default function ContactForm() {
   const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle"); // idle | sending | sent | failed | handoff
+  // Prerendered HTML ships the button disabled: a tap before hydration would otherwise do a native submit.
+  const [ready, setReady] = useState(false);
 
   // Preselect the service when arriving from a service page (/contact?service=<slug>).
   useEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect -- marks hydration complete
+    setReady(true);
     const slug = new URLSearchParams(window.location.search).get("service");
     const match = services.find((s) => s.slug === slug);
     // oxlint-disable-next-line react/set-state-in-effect -- read after hydration so server and client markup match
@@ -107,10 +111,10 @@ export default function ContactForm() {
   );
 
   return (
-    <form className="cform" onSubmit={onSubmit} noValidate aria-label="Project enquiry">
+    <form className="cform" method="post" onSubmit={onSubmit} noValidate aria-label="Project enquiry">
       <div className="cform__row">
         {field("name", "Full Name", { autoComplete: "name" })}
-        {field("email", "Business Email", { type: "email", autoComplete: "email", inputMode: "email" })}
+        {field("email", "Email", { type: "email", autoComplete: "email", inputMode: "email" })}
       </div>
       <div className="cform__row">
         {field("phone", "Phone Number", { type: "tel", autoComplete: "tel" }, true)}
@@ -160,7 +164,7 @@ export default function ContactForm() {
         <input id="cf-website" name="website" tabIndex={-1} autoComplete="off" value={form.website} onChange={set("website")} />
       </div>
 
-      <button type="submit" className="btn btn--primary cform__submit" disabled={status === "sending"}>
+      <button type="submit" className="btn btn--primary cform__submit" disabled={!ready || status === "sending"}>
         {status === "sending" ? (
           <><LoaderCircle size={18} className="spin" aria-hidden="true" /> Sending…</>
         ) : (
@@ -170,7 +174,7 @@ export default function ContactForm() {
 
       {!ENDPOINT && (
         <p className="cform__note">
-          This opens WhatsApp with your message filled in. Nothing is sent until you press send there.
+          This opens WhatsApp (run by Meta) with your message filled in. Nothing is sent until you press send there.
         </p>
       )}
 

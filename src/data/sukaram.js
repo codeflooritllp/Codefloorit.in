@@ -198,7 +198,7 @@ export function reply(node) {
   if (kind === "pricing") {
     return {
       text: `I can't quote prices, timelines or guarantees — they depend on what you need. ${FAQ_START.a}`,
-      links: [TO.contact],
+      links: [{ to: "/insights/business-website-cost-india", label: "What a business website costs in India" }, TO.contact],
       options: [START, BACK],
     };
   }

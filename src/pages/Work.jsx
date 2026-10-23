@@ -32,7 +32,8 @@ export default function Work() {
             ))}
           </div>
           <p className="notice notice--plain">
-            The visuals above are illustrative layout mockups, not screenshots of the delivered products.
+            Completed projects show screenshots of the delivered websites. Projects still in development show an
+            illustrative layout mockup, not a product screenshot.
           </p>
         </div>
       </section>

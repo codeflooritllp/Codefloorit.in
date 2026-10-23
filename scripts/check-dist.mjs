@@ -1,6 +1,6 @@
 /* Post-build self-check: `node scripts/check-dist.mjs` (run after `npm run build`).
    Fails if a prerendered page has a broken internal link, a missing/duplicate
-   title or canonical, more than one <h1>, or mentions a removed service. */
+   title or canonical, a missing image or og:image, more than one <h1>, or mentions a removed service. */
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -32,6 +32,8 @@ for (const page of pages) {
   if ((html.match(/<h1[\s>]/g) ?? []).length !== 1) fail("expected exactly one <h1>");
 
   for (const [, href] of html.matchAll(/href="(\/[^"]*)"/g)) if (!exists(href)) fail(`broken link ${href}`);
+  for (const [, src] of html.matchAll(/(?:og:image" content="https:\/\/www\.codefloorit\.in|src=")(\/[^"]+)"/g))
+    if (!exists(src)) fail(`missing image ${src}`);
 
   const text = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<[^>]+>/g, " ");
   const hit = text.match(REMOVED);

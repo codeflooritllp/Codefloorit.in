@@ -48,8 +48,8 @@ export function WorkScene() {
             {projects.map((p, i) => (
               <article key={p.slug} className={`wpanel pcard--${p.scene} ${i === active ? "is-active" : ""}`} style={{ "--i": i }}>
                 <div className="wpanel__media">
-                  <Mockup scene={p.scene} />
-                  <span className="pcard__tag">Illustrative mockup</span>
+                  <Mockup project={p} />
+                  {!p.shot && <span className="pcard__tag">Illustrative mockup</span>}
                 </div>
                 <div className="wpanel__body">
                   <div className="pcard__meta">
