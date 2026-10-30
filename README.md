@@ -59,8 +59,8 @@ The hidden honeypot field is a first filter; add server-side spam protection at 
 ## Deployment
 
 Static output in `dist/`. `vercel.json` enables clean URLs (`/services` -> `services.html`);
-unknown URLs get `404.html`. The canonical host is `https://www.codefloorit.in` because Vercel
-serves www and redirects the bare domain to it. If that changes, update `SITE_URL` in
+unknown URLs get `404.html`. The canonical host is `https://codefloorit.in` because Vercel
+serves the bare domain and 301-redirects www to it (Vercel Domains settings). If that changes, update `SITE_URL` in
 `src/lib/seo.js`, `index.html`, `public/robots.txt` and `scripts/check-dist.mjs`.
 `docs/codefloorit-com-redirects.json` is a page-to-page redirect map for the separate
 codefloorit.com Vercel project; it does nothing in this repo.

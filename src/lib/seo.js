@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect } from "react";
 
-/* Production serves www and redirects the bare domain to it, so canonical URLs use www. */
-export const SITE_URL = "https://www.codefloorit.in";
+/* Production serves the bare domain and 301-redirects www to it, so canonical URLs use the bare domain. */
+export const SITE_URL = "https://codefloorit.in";
 export const SITE_NAME = "Codefloor IT";
 const OG_IMAGE = `${SITE_URL}/og.png`;
 

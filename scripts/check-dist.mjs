@@ -28,11 +28,11 @@ for (const page of pages) {
   else titles.set(title, name);
 
   if (!/<meta name="description" content="[^"]{50,}"/.test(html)) fail("missing or short meta description");
-  if (name !== "404.html" && !html.includes('<link rel="canonical" href="https://www.codefloorit.in/')) fail("missing canonical");
+  if (name !== "404.html" && !html.includes('<link rel="canonical" href="https://codefloorit.in/')) fail("missing canonical");
   if ((html.match(/<h1[\s>]/g) ?? []).length !== 1) fail("expected exactly one <h1>");
 
   for (const [, href] of html.matchAll(/href="(\/[^"]*)"/g)) if (!exists(href)) fail(`broken link ${href}`);
-  for (const [, src] of html.matchAll(/(?:og:image" content="https:\/\/www\.codefloorit\.in|src=")(\/[^"]+)"/g))
+  for (const [, src] of html.matchAll(/(?:og:image" content="https:\/\/codefloorit\.in|src=")(\/[^"]+)"/g))
     if (!exists(src)) fail(`missing image ${src}`);
 
   const text = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<[^>]+>/g, " ");
