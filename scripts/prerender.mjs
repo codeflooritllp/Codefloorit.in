@@ -11,10 +11,15 @@ const { render, routes, SITE_URL } = await import(pathToFileURL(resolve(root, "d
 
 // preload the two latin fonts: otherwise they are found only after the CSS is parsed, and text repaints late
 const fonts = readdirSync(dist("assets")).filter((f) => /^(inter|space-grotesk)-latin-wght-normal-.*\.woff2$/.test(f));
-const template = readFileSync(dist("index.html"), "utf8").replace(
-  "</head>",
-  () => fonts.map((f) => `  <link rel="preload" href="/assets/${f}" as="font" type="font/woff2" crossorigin />\n`).join("") + "  </head>"
-);
+const template = readFileSync(dist("index.html"), "utf8")
+  .replace(
+    "</head>",
+    () => fonts.map((f) => `  <link rel="preload" href="/assets/${f}" as="font" type="font/woff2" crossorigin />\n`).join("") + "  </head>"
+  )
+  // Vite hoists the entry module into <head>. Modules are deferred by spec already; the explicit
+  // attribute changes nothing in browsers but stops SEO scanners reporting it as render-blocking.
+  // (Not async: that could run the bundle before #root is parsed and break hydration.)
+  .replace(/<script type="module" (?!defer)/g, '<script type="module" defer ');
 const pages = [];
 const unesc = (s) =>
   s.replace(/&quot;/g, '"').replace(/&#x27;|&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&");
