@@ -114,9 +114,14 @@ export function initFx() {
   let spinning = 0;
   const settle = () => {
     vel *= 0.9;
-    html.style.setProperty("--skew", `${Math.max(-12, Math.min(12, vel * -0.25)).toFixed(2)}deg`);
-    for (const track of document.querySelectorAll(".mq__track")) {
-      for (const a of track.getAnimations()) a.playbackRate = 1 + Math.min(6, Math.abs(vel) * 0.12);
+    const skew = `${Math.max(-12, Math.min(12, vel * -0.25)).toFixed(2)}deg`;
+    const rate = 1 + Math.min(6, Math.abs(vel) * 0.12);
+    // read every track's animations before writing anything: getAnimations() after a style
+    // write forces a recalc, and writing --skew on <html> made that recalc cover the whole page
+    const tracks = [...document.querySelectorAll(".mq__track")].map((t) => [t, t.getAnimations()]);
+    for (const [track, anims] of tracks) {
+      track.style.setProperty("--skew", skew);
+      for (const a of anims) a.playbackRate = rate;
     }
     spinning = Math.abs(vel) > 0.05 ? requestAnimationFrame(settle) : 0;
   };

@@ -595,7 +595,10 @@ function ringShape(n) {
 function morph(scene) {
   const N = 7000;
   const { out: galaxy, radius } = galaxyShape(N);
-  const shapes = [galaxy, hexShape(N), globeShape(N), screenShape(N), helixShape(N), ringShape(N)];
+  // only the galaxy is needed at load; the rest are built the first time scrolling reaches them
+  const build = [null, hexShape, globeShape, screenShape, helixShape, ringShape];
+  const shapes = [galaxy];
+  const shape = (i) => (shapes[i] ??= build[i](N));
   const OFFSET_X = [3.6, 4.4, 4.6, 4.2, 4.8, 4.4]; // keep each shape to the right of the copy
 
   const inner = new Color(0xeafcff);
@@ -634,16 +637,31 @@ function morph(scene) {
   rig.add(spin);
   scene.add(rig, stars);
 
-  const sections = [...document.querySelectorAll("[data-morph]")].slice(0, shapes.length);
+  const sections = [...document.querySelectorAll("[data-morph]")].slice(0, build.length);
   const last = Math.max(0, sections.length - 1);
   let cur = 0;
+  let drawn = -1; // the cur the positions were last written for
+
+  // section centres in page coordinates, re-measured only when layout changes: reading
+  // rects every frame forced a layout after the other rAF callbacks had written styles
+  let pageCentres = [];
+  const measure = () => {
+    pageCentres = sections.map((el) => {
+      const r = el.getBoundingClientRect();
+      return r.top + window.scrollY + Math.min(r.height, window.innerHeight) / 2;
+    });
+  };
+  const sized = new ResizeObserver(measure);
+  sized.observe(document.body);
+  measure();
+  // scrollY read inside the frame flushes layout too, so take it from the scroll event
+  let scrollY = window.scrollY;
+  const onScroll = () => (scrollY = window.scrollY);
+  window.addEventListener("scroll", onScroll, { passive: true });
 
   const target = () => {
     const middle = window.innerHeight / 2;
-    const centres = sections.map((el) => {
-      const r = el.getBoundingClientRect();
-      return r.top + Math.min(r.height, window.innerHeight) / 2;
-    });
+    const centres = pageCentres.map((c) => c - scrollY);
     if (!centres.length || middle <= centres[0]) return 0;
     for (let i = 0; i < last; i++) {
       if (middle <= centres[i + 1]) return i + (middle - centres[i]) / (centres[i + 1] - centres[i]);
@@ -652,16 +670,20 @@ function morph(scene) {
   };
   const smooth = (x) => x * x * (3 - 2 * x);
 
-  return (dt, t, _pointer, ndc) => {
+  const update = (dt, t, _pointer, ndc) => {
     cur = Math.min(last, Math.max(0, cur + (target() - cur) * ease(dt, 0.004)));
     const from = Math.min(Math.floor(cur), last);
     const to = Math.min(from + 1, last);
     const k = smooth(cur - from);
-    const a = shapes[from];
-    const b = shapes[to];
     const swirl = Math.sin(k * Math.PI) * 1.4;
-    for (let i = 0; i < N * 3; i++) pos[i] = a[i] + (b[i] - a[i]) * k + drift[i] * swirl;
-    attr.needsUpdate = true;
+    // positions depend only on cur: skip the rewrite and GPU upload while the page is still
+    if (Math.abs(cur - drawn) > 1e-4) {
+      drawn = cur;
+      const a = shape(from);
+      const b = shape(to);
+      for (let i = 0; i < N * 3; i++) pos[i] = a[i] + (b[i] - a[i]) * k + drift[i] * swirl;
+      attr.needsUpdate = true;
+    }
 
     spin.rotation.y += dt * (0.06 + swirl * 0.25);
     rig.rotation.y += (ndc.x * 0.35 - rig.rotation.y) * ease(dt);
@@ -673,6 +695,11 @@ function morph(scene) {
     field.material.opacity = Math.max(0.8, 1 - cur * 0.2);
     core.material.opacity = Math.max(0, 1 - cur * 2) * (0.85 + Math.sin(t * 1.4) * 0.15);
   };
+  update.dispose = () => {
+    sized.disconnect();
+    window.removeEventListener("scroll", onScroll);
+  };
+  return update;
 }
 
 const SCENES = { cluster, laptop, hexes, windows, rings, morph };
@@ -753,6 +780,7 @@ export function mount(canvas, kind) {
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
       observer.disconnect();
+      update.dispose?.();
       scene.traverse((o) => {
         o.geometry?.dispose();
         o.material?.map?.dispose();

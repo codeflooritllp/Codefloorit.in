@@ -18,8 +18,10 @@ export default function Robot({ mood = "idle", track = false, className = "" }) 
     let raf = 0;
     const move = (e) => {
       cancelAnimationFrame(raf);
+      // measure in the event, not the rAF: by then other rAF callbacks have written styles
+      // and the read would force a layout
+      const r = el.getBoundingClientRect();
       raf = requestAnimationFrame(() => {
-        const r = el.getBoundingClientRect();
         const clamp = (n) => Math.max(-1, Math.min(1, n));
         el.style.setProperty("--ex", clamp((e.clientX - (r.left + r.width / 2)) / 320).toFixed(2));
         el.style.setProperty("--ey", clamp((e.clientY - (r.top + r.height * 0.3)) / 260).toFixed(2));
