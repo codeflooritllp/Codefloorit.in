@@ -8,12 +8,21 @@ export const finePointer = () => window.matchMedia("(hover: hover) and (pointer:
 let revealObserver;
 function getRevealObserver() {
   revealObserver ??= new IntersectionObserver(
-    (entries) =>
+    (entries) => {
+      // elements arriving together cascade in; an explicit delay prop (--d) is kept as is
+      let n = 0;
       entries.forEach((e) => {
         if (!e.isIntersecting) return;
+        if (!e.target.style.getPropertyValue("--d")) {
+          const el = e.target;
+          el.style.setProperty("--d", `${Math.min(n++, 6) * 70}ms`);
+          // drop it once played, so later hover-out transitions are not delayed
+          setTimeout(() => el.style.removeProperty("--d"), 2000); // > longest reveal (420ms delay + 1.1s scan-in)
+        }
         e.target.classList.add("is-in");
         revealObserver.unobserve(e.target);
-      }),
+      });
+    },
     { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
   );
   return revealObserver;
@@ -94,24 +103,39 @@ export function useScrollProgress(mode = "through", onProgress) {
 
 /* ---------- Pointer effects (fine pointers only, off for reduced motion) ---------- */
 
-/** Magnetic pull: the element drifts a few pixels toward the pointer. */
+/** Magnetic pull: the element drifts toward the pointer and springs back when it leaves.
+    anime.js owns the transform (.is-magnetic drops the CSS transform transition); it is the
+    same lazily loaded chunk lib/fx.js uses on these devices. Keyboard and touch get the plain button. */
 export function useMagnetic(strength = 0.25) {
   const ref = useRef(null);
   useEffect(() => {
     const el = ref.current;
     if (!strength || reduced() || !finePointer()) return;
+    let alive = true;
+    let pull;
+    import("animejs").then(({ createAnimatable }) => {
+      if (!alive) return;
+      el.classList.add("is-magnetic");
+      pull = createAnimatable(el, { x: 0, y: 0, duration: 220, ease: "out(3)" });
+    });
     const move = (e) => {
+      if (!pull) return;
       const r = el.getBoundingClientRect();
-      const x = (e.clientX - r.left - r.width / 2) * strength;
-      const y = (e.clientY - r.top - r.height / 2) * strength;
-      el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+      pull.x((e.clientX - r.left - r.width / 2) * strength);
+      pull.y((e.clientY - r.top - r.height / 2) * strength);
     };
-    const leave = () => (el.style.transform = "");
+    const leave = () => {
+      pull?.x(0, 900, "outElastic(1, 0.45)");
+      pull?.y(0, 900, "outElastic(1, 0.45)");
+    };
     el.addEventListener("pointermove", move);
     el.addEventListener("pointerleave", leave);
     return () => {
+      alive = false;
       el.removeEventListener("pointermove", move);
       el.removeEventListener("pointerleave", leave);
+      pull?.revert();
+      el.classList.remove("is-magnetic");
     };
   }, [strength]);
   return ref;

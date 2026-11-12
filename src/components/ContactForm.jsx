@@ -3,6 +3,7 @@ import { CircleAlert, CircleCheck, LoaderCircle, Send } from "lucide-react";
 import { CONTACT, whatsappLink } from "../data/site";
 import { services } from "../data/services";
 import { BRIEF_KEY } from "../data/sukaram";
+import ProjectBlueprint, { PARTS } from "./ProjectBlueprint";
 
 /* Set VITE_CONTACT_ENDPOINT (see .env.example) to a URL that accepts a JSON POST.
    Without it nothing can be delivered from this page, so the form opens WhatsApp
@@ -10,7 +11,7 @@ import { BRIEF_KEY } from "../data/sukaram";
 const ENDPOINT = import.meta.env.VITE_CONTACT_ENDPOINT;
 
 const SERVICE_OPTIONS = [...services.map((s) => s.title), "Not sure yet"];
-const EMPTY = { name: "", email: "", phone: "", company: "", service: "", details: "", website: "" };
+const EMPTY = { name: "", email: "", phone: "", company: "", service: "", details: "", website: "", parts: [] };
 
 export function validate(f) {
   const e = {};
@@ -21,6 +22,12 @@ export function validate(f) {
   if (f.details.trim().length < 20) e.details = "Tell us a little more — at least 20 characters.";
   return e;
 }
+
+/** Folds the blueprint parts into the details text, so what is sent keeps the same fields. */
+const withParts = ({ parts, ...f }) =>
+  parts.length
+    ? { ...f, details: `${f.details}\n\nShould include: ${PARTS.filter((p) => parts.includes(p.key)).map((p) => p.label).join(", ")}` }
+    : f;
 
 const summary = (f) =>
   [
@@ -70,13 +77,13 @@ export default function ContactForm() {
     if (form.website) return; // honeypot: real visitors never see or fill this field
 
     if (!ENDPOINT) {
-      window.open(whatsappLink(`Project enquiry — Codefloor IT\n\n${summary(form)}`), "_blank", "noopener");
+      window.open(whatsappLink(`Project enquiry — Codefloor IT\n\n${summary(withParts(form))}`), "_blank", "noopener");
       return setStatus("handoff");
     }
 
     setStatus("sending");
     try {
-      const { website: _honeypot, ...payload } = form;
+      const { website: _honeypot, ...payload } = withParts(form);
       const res = await fetch(ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
@@ -141,6 +148,8 @@ export default function ContactForm() {
         <FieldError id="cf-service-err" msg={errors.service} />
       </div>
 
+      <ProjectBlueprint value={form.parts} onChange={(parts) => setForm((f) => ({ ...f, parts }))} />
+
       <div className="field">
         <label htmlFor="cf-details">Project Details</label>
         <textarea
@@ -189,7 +198,7 @@ export default function ContactForm() {
             <CircleCheck size={20} aria-hidden="true" />
             <span>
               WhatsApp should now be open with your message ready — press send there. If it did not open,{" "}
-              <a href={whatsappLink(summary(form))} target="_blank" rel="noopener noreferrer">open WhatsApp</a> or email{" "}
+              <a href={whatsappLink(summary(withParts(form)))} target="_blank" rel="noopener noreferrer">open WhatsApp</a> or email{" "}
               <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>.
             </span>
           </p>
