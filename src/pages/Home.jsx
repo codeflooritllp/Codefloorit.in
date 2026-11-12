@@ -102,6 +102,7 @@ export default function Home() {
       <Scene3D kind="morph" />
       <Hero />
       <Marquee reverse items={techGroups.flatMap((g) => g.items)} />
+      <KineticStatement />
       <StoryScene />
 
       <ServiceReel
@@ -141,7 +142,6 @@ export default function Home() {
       </section>
 
       <WorkScene />
-      <KineticStatement />
       <TechShowcase />
 
       <section className="section about-teaser" data-robot="idle">
