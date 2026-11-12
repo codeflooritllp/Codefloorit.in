@@ -1,7 +1,8 @@
 import { Check, Mail, MessageCircle, Phone } from "lucide-react";
 import { CONTACT, PROCESS, WHY, whatsappLink } from "../data/site";
 import { techGroups } from "../data/tech";
-import { useScrollProgress } from "../lib/motion";
+import { useEffect, useRef } from "react";
+import { canAnimate, useScrollProgress } from "../lib/motion";
 import { Ambient, Reveal, SectionHeading } from "./ui";
 import ContactForm from "./ContactForm";
 import { ZoomIn } from "./scenes";
@@ -40,8 +41,36 @@ export function TechShowcase() {
   );
 }
 
+/* As the line fills with scroll, each stage "compiles": its build bar runs, then a check
+   pops in. One paused anime.js timeline is scrubbed by scroll progress, so scrolling back
+   rewinds it. Without motion the stages simply show as complete. */
+const STAGE = 1000; // timeline ms per stage
 export function ProcessTimeline() {
-  const ref = useScrollProgress("fill");
+  const timeline = useRef(null);
+  const progress = useRef(0);
+  const ref = useScrollProgress("fill", (p) => {
+    progress.current = p;
+    timeline.current?.seek(p * STAGE * PROCESS.length);
+  });
+  useEffect(() => {
+    if (!canAnimate()) return;
+    let alive = true;
+    import("animejs").then(({ createTimeline }) => {
+      if (!alive) return;
+      const tl = createTimeline({ autoplay: false });
+      ref.current.querySelectorAll(".tl__step").forEach((step, i) => {
+        tl.add(step.querySelector(".tl__build i"), { scaleX: [0, 1], duration: 600, ease: "linear" }, i * STAGE)
+          .add(step.querySelector(".tl__ok"), { scale: [0, 1], opacity: { from: 0, to: 1, ease: "linear" }, duration: 250, ease: "outBack(3)" }, i * STAGE + 600);
+      });
+      tl.seek(progress.current * STAGE * PROCESS.length);
+      timeline.current = tl;
+    });
+    return () => {
+      alive = false;
+      timeline.current?.revert();
+      timeline.current = null;
+    };
+  }, [ref]);
   return (
     <div className="tl" ref={ref}>
       <span className="tl__line" aria-hidden="true"><i /></span>
@@ -50,9 +79,11 @@ export function ProcessTimeline() {
           <Reveal as="li" key={s.n} className="tl__step">
             <span className="tl__dot" aria-hidden="true" />
             <div className="tl__card">
+              <span className="tl__ok" aria-hidden="true"><Check size={14} strokeWidth={3} /></span>
               <span className="tl__n">{s.n}</span>
               <h3>{s.title}</h3>
               <p>{s.text}</p>
+              <span className="tl__build" aria-hidden="true"><i /></span>
             </div>
           </Reveal>
         ))}
@@ -140,7 +171,7 @@ export function WhySection() {
 }
 
 /** Contact details + form. `heading` is passed on pages where this is not under an <h1>. */
-export function ContactSection({ heading = true }) {
+export function ContactSection({ heading = true, title = "Have an Idea? Let's Build It." }) {
   return (
     <section className={`section dark contact ${heading ? "" : "contact--page"}`} id="contact" data-morph data-robot="greet" data-robot-hint={heading ? "contact" : undefined}>
       <div className="gridbg" aria-hidden="true" />
@@ -149,7 +180,7 @@ export function ContactSection({ heading = true }) {
           {heading && (
             <SectionHeading
               eyebrow="Contact"
-              title="Have an Idea? Let's Build It."
+              title={title}
               sub="Tell us about your project, business challenge, or technology requirements. Let's explore the right solution."
             />
           )}

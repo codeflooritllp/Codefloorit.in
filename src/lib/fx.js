@@ -1,3 +1,4 @@
+import { animate, createAnimatable, random, scrambleText, stagger } from "animejs";
 import { canAnimate, finePointer } from "./motion";
 
 /* Pointer effects for desktops with a mouse: a soft light and a HUD reticle that follow the
@@ -17,21 +18,31 @@ function scramble(el) {
   const node = [...el.childNodes].find((n) => n.nodeType === 3 && n.nodeValue.trim());
   if (!node || el.dataset.fxBusy) return;
   el.dataset.fxBusy = "1";
-  const text = node.nodeValue;
-  const start = performance.now();
-  const step = (now) => {
-    const shown = Math.floor(((now - start) / 420) * text.length);
-    if (shown >= text.length) {
-      node.nodeValue = text;
-      delete el.dataset.fxBusy;
-      return;
-    }
-    let out = text.slice(0, shown);
-    for (let i = shown; i < text.length; i++) out += text[i] === " " ? " " : GLYPHS[(Math.random() * GLYPHS.length) | 0];
-    node.nodeValue = out;
-    requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
+  // anime writes to a plain proxy so only this text node changes, not icons beside it
+  const text = { textContent: node.nodeValue };
+  animate(text, {
+    textContent: scrambleText({ chars: GLYPHS, duration: 420 }),
+    onUpdate: () => (node.nodeValue = text.textContent),
+    onComplete: () => delete el.dataset.fxBusy,
+  });
+}
+
+/** Service card art breaks apart and springs back together, like a build snapping into place. */
+function assemble(card) {
+  animate(card.querySelectorAll(".glyph__front > *"), {
+    translateX: { from: () => random(-34, 34), to: 0 }, // not x/y: on SVG shapes those are the position attributes
+    translateY: { from: () => random(-26, 26), to: 0 },
+    rotate: { from: () => random(-50, 50), to: 0 },
+    scale: { from: 0.4, to: 1 },
+    delay: stagger(45),
+    duration: 900,
+    ease: "outElastic(1, 0.55)",
+  });
+}
+
+/** Card icons give a small springy wobble when the pointer arrives. */
+function nudge(icon) {
+  animate(icon, { rotate: { from: -16, to: 0 }, scale: { from: 1.18, to: 1 }, duration: 800, ease: "outElastic(1, 0.4)" });
 }
 
 export function initFx() {
@@ -50,20 +61,16 @@ export function initFx() {
   reticle.setAttribute("aria-hidden", "true");
   document.body.appendChild(reticle);
 
-  let x = innerWidth / 2;
-  let y = innerHeight / 2;
-  let rx = x;
-  let ry = y;
-  let raf = 0;
+  // anime batches these writes into its own frame, so pointermove only reads layout
+  const light = createAnimatable(glow, { x: 0, y: 0, duration: 60, ease: "linear" });
+  const trail = createAnimatable(reticle, { x: 0, y: 0, duration: 180, ease: "out(3)" });
+  for (const a of [light, trail]) {
+    a.x(innerWidth / 2, 0);
+    a.y(innerHeight / 2, 0);
+  }
+  let x = 0;
+  let y = 0;
   let tilted = null;
-
-  const paint = () => {
-    rx += (x - rx) * 0.25;
-    ry += (y - ry) * 0.25;
-    glow.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-    reticle.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
-    raf = Math.abs(x - rx) + Math.abs(y - ry) > 0.5 ? requestAnimationFrame(paint) : 0;
-  };
   document.addEventListener("pointerdown", (e) => {
     reticle.classList.add("is-down");
     // shockwave at the click, and the origin for the next page's portal reveal
@@ -86,7 +93,18 @@ export function initFx() {
     (e) => {
       x = e.clientX;
       y = e.clientY;
-      if (!raf) raf = requestAnimationFrame(paint);
+      light.x(x);
+      light.y(y);
+      trail.x(x);
+      trail.y(y);
+
+      // soft glow inside buttons follows the pointer (.fx .btn::after)
+      const btn = e.target.closest?.(".btn");
+      if (btn) {
+        const b = btn.getBoundingClientRect();
+        btn.style.setProperty("--bx", `${x - b.left}px`);
+        btn.style.setProperty("--by", `${y - b.top}px`);
+      }
 
       const card = e.target.closest?.(TILT);
       if (tilted && tilted !== card) {
@@ -106,6 +124,11 @@ export function initFx() {
     reticle.classList.toggle("is-hot", !!e.target.closest?.(HOT));
     const el = e.target.closest?.(SCRAMBLE);
     if (el && !el.contains(e.relatedTarget)) scramble(el);
+    const card = e.target.closest?.(".scard");
+    if (card && !card.contains(e.relatedTarget)) assemble(card);
+    const tile = e.target.closest?.(".card, .srow");
+    const icon = tile && !tile.contains(e.relatedTarget) && tile.querySelector(".icon-tile svg");
+    if (icon) nudge(icon);
   });
 
   // tickers speed up and lean with the scroll, then settle back
@@ -146,7 +169,11 @@ export function initFx() {
     },
     { threshold: 0.6 }
   );
-  const watch = (root) => root.querySelectorAll?.(".shead__title").forEach((h) => io.observe(h));
+  const watch = (root) => {
+    root.querySelectorAll?.(".shead__title").forEach((h) => io.observe(h));
+    // page entrance: the hero eyebrow decodes once, alongside the CSS rise
+    root.querySelectorAll?.(".hero .eyebrow, .phero .eyebrow").forEach((el) => setTimeout(() => scramble(el), 300));
+  };
   watch(document);
   // pages rendered later by the router bring new headings
   new MutationObserver((records) => records.forEach((r) => r.addedNodes.forEach(watch))).observe(document.getElementById("root"), {

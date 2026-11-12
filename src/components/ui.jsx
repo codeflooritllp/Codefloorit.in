@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { Link } from "react-router";
 import { ArrowRight, ChevronRight, Plus } from "lucide-react";
 import { useReveal, useMagnetic, usePointerVars, useScrollProgress } from "../lib/motion";
@@ -39,12 +40,13 @@ export function ArrowLink({ to, children, className = "" }) {
   );
 }
 
-/** Wraps each word so headings can animate in word by word (see .sw in the stylesheet). */
-export function Split({ text }) {
+/** Wraps each word so headings can animate in word by word (see .sw in the stylesheet).
+    `start` continues the word count from an earlier Split; `wordClass` styles each word. */
+export function Split({ text, start = 0, wordClass }) {
   if (typeof text !== "string") return text;
   return text.split(" ").map((word, i) => (
     <span key={i}>
-      <span className="sw" style={{ "--w": i }}><span>{word}</span></span>{" "}
+      <span className="sw" style={{ "--w": start + i }}><span className={wordClass}>{word}</span></span>{" "}
     </span>
   ));
 }
@@ -64,12 +66,38 @@ export function Marquee({ items, reverse = false }) {
   );
 }
 
+/** The accent line under section headings: an SVG stroke that draws itself when the
+    heading reveals (CSS, see .shead__line). Centred headings draw out from the middle. */
+function HeadLine({ center }) {
+  const grad = `hl${useId().replace(/[^a-z0-9]/gi, "")}`;
+  return (
+    <svg className="shead__line" viewBox="0 0 72 4" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id={grad} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="72" y2="0">
+          <stop stopColor="#00d4ff" />
+          <stop offset="1" stopColor="#1677ff" />
+        </linearGradient>
+      </defs>
+      <g stroke={`url(#${grad})`}>
+        {center ? (
+          <>
+            <path d="M36 2H2" pathLength="1" />
+            <path d="M36 2H70" pathLength="1" />
+          </>
+        ) : (
+          <path d="M2 2H70" pathLength="1" />
+        )}
+      </g>
+    </svg>
+  );
+}
+
 export function SectionHeading({ eyebrow, title, sub, center = false, as: H = "h2" }) {
   return (
     <Reveal className={`shead ${center ? "shead--center" : ""}`}>
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
       <H className="shead__title"><Split text={title} /></H>
-      <span className="shead__line" aria-hidden="true" />
+      <HeadLine center={center} />
       {sub && <p className="shead__sub">{sub}</p>}
     </Reveal>
   );

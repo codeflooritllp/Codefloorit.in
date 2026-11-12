@@ -27,7 +27,7 @@ export const services = [
       { q: "When does custom software make sense over a ready-made product?", a: "When your core workflow is unusual, when existing tools force awkward workarounds, or when you need one connected system instead of several disconnected products." },
       { q: "Can custom software replace our spreadsheets?", a: "That is one of the most common starting points. We turn the logic living in spreadsheets into a structured system with validation, history, roles and reporting." },
     ],
-    projects: ["patient-handling-system", "aranya-palace"],
+    projects: ["leadhunter-crm", "patient-handling-system", "aranya-palace"],
   },
   {
     slug: "web-application-development",
@@ -54,7 +54,7 @@ export const services = [
       { q: "What is the difference between a website and a web application?", a: "A website mainly communicates information. A web application supports tasks: accounts, data entry, dashboards, bookings or business processes. Many projects need elements of both." },
       { q: "Will it work on phones and tablets?", a: "Yes. We design responsive interfaces and test them across phone, tablet and desktop screen sizes." },
     ],
-    projects: ["patient-handling-system", "aranya-palace"],
+    projects: ["leadhunter-crm", "patient-handling-system", "aranya-palace"],
   },
   {
     slug: "business-website-development",
