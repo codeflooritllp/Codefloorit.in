@@ -87,38 +87,9 @@
   <body>
     <!-- Brand intro: first homepage load of a browser session only, never with reduced motion.
          Injected here so it paints with the first frame, before the bundle loads; the timeline is
-         CSS (see "Intro" in src/styles/index.css). Any key, click, wheel or touch skips it. -->
-    <script>
-      (function () {
-        try {
-          var h = document.documentElement;
-          if (location.pathname !== "/" || sessionStorage.getItem("cf-intro") || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-          sessionStorage.setItem("cf-intro", "1");
-          h.classList.add("has-intro");
-          document.body.insertAdjacentHTML(
-            "afterbegin",
-            '<div class="intro" aria-hidden="true"><div class="intro__light"></div><div class="intro__mark">' +
-              '<div class="intro__logo"><img src="/logo.webp" width="384" height="172" alt="" decoding="sync" fetchpriority="high" /></div>' +
-              '<p class="intro__name">CODEFLOOR IT</p><p class="intro__tag">Build <i>&bull;</i> Innovate <i>&bull;</i> Transform</p></div></div>'
-          );
-          var el = document.body.firstElementChild, ev = ["pointerdown", "keydown", "wheel", "touchstart"], t;
-          var done = function () {
-            ev.forEach(function (e) { removeEventListener(e, skip, true); });
-            el.remove();
-          };
-          var skip = function () {
-            if (h.classList.contains("intro-skip")) return;
-            h.classList.add("intro-skip");
-            clearTimeout(t);
-            t = setTimeout(done, 400);
-          };
-          ev.forEach(function (e) { addEventListener(e, skip, { capture: true, passive: true }); });
-          t = setTimeout(done, 3100);
-          // the hero's entrance is offset while .has-intro is set; drop it once that entrance has finished
-          setTimeout(function () { h.classList.remove("has-intro", "intro-skip"); }, 5200);
-        } catch (e) {}
-      })();
-    </script>
+         CSS (see "Intro" in src/styles/index.css). Any key, click, wheel or touch skips it.
+         A file, not inline: the CSP in vercel.json blocks inline scripts. -->
+    <script src="/intro.js"></script>
     <div id="root"><!--app--></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

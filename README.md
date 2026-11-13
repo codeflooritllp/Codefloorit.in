@@ -27,7 +27,7 @@ from `lib/motion.js`, not `window.scrollTo`, or the two will fight; tune the fee
 `wheelMultiplier` in `initSmoothScroll()`.
 
 The brand intro plays on the first homepage load of a browser session (`sessionStorage` key
-`cf-intro`), never with reduced motion. An inline script at the top of `<body>` in `index.html`
+`cf-intro`), never with reduced motion. `public/intro.js`, loaded at the top of `<body>` (not inline: the CSP blocks inline scripts),
 injects it so it paints before the bundle loads; its 3s timeline is CSS ("Intro" in
 `src/styles/index.css`). Any key, click, wheel or touch skips it.
 
