@@ -2,8 +2,7 @@
 (function () {
   try {
     var h = document.documentElement;
-    if (location.pathname !== "/" || sessionStorage.getItem("cf-intro") || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    sessionStorage.setItem("cf-intro", "1");
+    if (location.pathname !== "/" || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     h.classList.add("has-intro");
     document.body.insertAdjacentHTML(
       "afterbegin",
@@ -26,5 +25,5 @@
     t = setTimeout(done, 3100);
     // the hero's entrance is offset while .has-intro is set; drop it once that entrance has finished
     setTimeout(function () { h.classList.remove("has-intro", "intro-skip"); }, 5200);
-  } catch (e) {}
+  } catch {}
 })();

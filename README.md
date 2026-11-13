@@ -26,8 +26,8 @@ so sticky scenes and observers are unaffected. Scroll programmatically with `scr
 from `lib/motion.js`, not `window.scrollTo`, or the two will fight; tune the feel with `lerp` and
 `wheelMultiplier` in `initSmoothScroll()`.
 
-The brand intro plays on the first homepage load of a browser session (`sessionStorage` key
-`cf-intro`), never with reduced motion. `public/intro.js`, loaded at the top of `<body>` (not inline: the CSP blocks inline scripts),
+The brand intro plays on every full load of the homepage (not on in-app navigation), never with
+reduced motion. `public/intro.js`, loaded at the top of `<body>` (not inline: the CSP blocks inline scripts),
 injects it so it paints before the bundle loads; its 3s timeline is CSS ("Intro" in
 `src/styles/index.css`). Any key, click, wheel or touch skips it.
 
