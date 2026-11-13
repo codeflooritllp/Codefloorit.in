@@ -1,5 +1,5 @@
 import { animate, createAnimatable, random, scrambleText, stagger } from "animejs";
-import { canAnimate, finePointer } from "./motion";
+import { canAnimate, finePointer, introDelay } from "./motion";
 
 /* Pointer effects for desktops with a mouse: a soft light and a HUD reticle that follow the
    cursor, cards that tilt toward it, short labels that "decode" on hover, and section
@@ -172,7 +172,7 @@ export function initFx() {
   const watch = (root) => {
     root.querySelectorAll?.(".shead__title").forEach((h) => io.observe(h));
     // page entrance: the hero eyebrow decodes once, alongside the CSS rise
-    root.querySelectorAll?.(".hero .eyebrow, .phero .eyebrow").forEach((el) => setTimeout(() => scramble(el), 300));
+    root.querySelectorAll?.(".hero .eyebrow, .phero .eyebrow").forEach((el) => setTimeout(() => scramble(el), 300 + introDelay()));
   };
   watch(document);
   // pages rendered later by the router bring new headings

@@ -244,3 +244,9 @@ export function useScrollBar() {
   }, []);
   return ref;
 }
+
+/** Milliseconds the brand intro (inline script in index.html) still covers the page, if it is playing. */
+export function introDelay() {
+  const c = document.documentElement.classList;
+  return c.contains("has-intro") && !c.contains("intro-skip") ? 2450 : 0;
+}
