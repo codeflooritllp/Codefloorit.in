@@ -3,8 +3,9 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 import "@fontsource-variable/inter/wght.css";
 import "@fontsource-variable/space-grotesk/wght.css";
+import "lenis/dist/lenis.css";
 import App from "./App";
-import { canAnimate, finePointer } from "./lib/motion";
+import { canAnimate, finePointer, initSmoothScroll } from "./lib/motion";
 
 const root = document.getElementById("root");
 const app = (
@@ -27,7 +28,10 @@ document.querySelectorAll(".reveal").forEach((el) => {
 });
 html.classList.add("anim");
 // pointer effects (and anime.js with them) only load where they run: desktop, motion allowed
-if (canAnimate() && finePointer()) import("./lib/fx").then((m) => m.initFx());
+if (canAnimate() && finePointer()) {
+  import("./lib/fx").then((m) => m.initFx());
+  initSmoothScroll();
+}
 
 // Production pages are prerendered (scripts/prerender.mjs) and hydrated; dev starts empty.
 if (root.firstElementChild) hydrateRoot(root, app);

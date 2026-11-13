@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router";
 import { Menu, X } from "lucide-react";
 import { NAV } from "../data/site";
 import { Btn, Logo } from "./ui";
+import { lockScroll } from "../lib/motion";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -20,9 +21,11 @@ export default function Navbar() {
     const onKey = (e) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
     document.documentElement.style.overflow = "hidden"; // the page behind the menu stays put
+    lockScroll(true);
     return () => {
       window.removeEventListener("keydown", onKey);
       document.documentElement.style.overflow = "";
+      lockScroll(false);
     };
   }, [open]);
 

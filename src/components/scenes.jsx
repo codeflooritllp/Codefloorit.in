@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import { projects } from "../data/projects";
 import { services } from "../data/services";
-import { useScrollProgress } from "../lib/motion";
+import { scrollToTarget, useScrollProgress } from "../lib/motion";
 import { ArrowLink, SectionHeading, StatusBadge } from "./ui";
 import { Mockup } from "./cards";
 import ServiceGlyph from "./ServiceGlyph";
@@ -240,7 +240,7 @@ export function WorkScene() {
     const el = ref.current;
     if (!el || !pinned()) return;
     const top = el.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({ top: top + (i / Math.max(1, n - 1)) * (el.offsetHeight - window.innerHeight), behavior: "instant" });
+    scrollToTarget(top + (i / Math.max(1, n - 1)) * (el.offsetHeight - window.innerHeight), { immediate: true });
   };
 
   return (
