@@ -20,6 +20,17 @@ Pinned scenes (home hero, portfolio) are `position: sticky` inside a tall wrappe
 only on desktop-sized, tall-enough viewports without reduced motion (see "Scenes" in
 `src/styles/index.css`); everywhere else they are ordinary sections.
 
+Smooth scrolling is [Lenis](https://github.com/darkroomengineering/lenis), loaded only for a mouse or
+trackpad without reduced motion (touch keeps native scrolling). It moves the real window scroll,
+so sticky scenes and observers are unaffected. Scroll programmatically with `scrollToTarget()`
+from `lib/motion.js`, not `window.scrollTo`, or the two will fight; tune the feel with `lerp` and
+`wheelMultiplier` in `initSmoothScroll()`.
+
+The brand intro plays on the first homepage load of a browser session (`sessionStorage` key
+`cf-intro`), never with reduced motion. An inline script at the top of `<body>` in `index.html`
+injects it so it paints before the bundle loads; its 3s timeline is CSS ("Intro" in
+`src/styles/index.css`). Any key, click, wheel or touch skips it.
+
 The robot (`components/Robot.jsx`) is an SVG with CSS poses. Sections choose its pose with
 `data-robot="idle|point|explore|think|greet"`. The robot is named Sukaram. Everything he
 knows and says lives in `src/data/sukaram.js` (greeting, suggested questions, answers,

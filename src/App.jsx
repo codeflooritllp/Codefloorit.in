@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Assistant from "./components/Assistant";
 import Home from "./pages/Home";
-import { canAnimate, useScrollBar, useSpotlight } from "./lib/motion";
+import { canAnimate, scrollToTarget, useScrollBar, useSpotlight } from "./lib/motion";
 
 /* After a deploy, a tab still running the old build asks for page files that no longer exist.
    Load the page fresh instead of showing a blank screen (at most once a minute, so an outage cannot loop). */
@@ -42,10 +42,13 @@ function useRouteScroll() {
   useEffect(() => {
     const initial = first.current;
     first.current = false;
-    if (hash) return document.getElementById(hash.slice(1))?.scrollIntoView();
+    if (hash) {
+      const el = document.getElementById(decodeURIComponent(hash.slice(1)));
+      return el && scrollToTarget(el, { immediate: initial });
+    }
     if (initial) return;
     document.documentElement.classList.add("navd"); // enables the page-enter animation after the first load
-    window.scrollTo({ top: 0, behavior: "instant" });
+    scrollToTarget(0, { immediate: true }); // also stops any smooth scroll still running from the last page
     document.getElementById("main")?.focus({ preventScroll: true });
   }, [pathname, hash]);
 }
@@ -64,7 +67,17 @@ function usePageExit() {
       const a = e.target.closest?.("a[href]");
       if (!a || (a.target && a.target !== "_self") || a.hasAttribute("download")) return;
       const url = new URL(a.href, location.href);
-      if (url.origin !== location.origin || url.pathname === location.pathname || !canAnimate()) return;
+      if (url.origin !== location.origin) return;
+      // same-page anchor: let the router record it and useRouteScroll scroll there, instead of
+      // the browser's own jump, which would fight the smooth scroller; a repeat click scrolls again
+      if (url.pathname === location.pathname && url.hash) {
+        e.preventDefault();
+        const el = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+        if (url.hash !== location.hash) navigate(url.hash);
+        else if (el) scrollToTarget(el);
+        return;
+      }
+      if (url.pathname === location.pathname || !canAnimate()) return;
       const page = document.querySelector("#main .page");
       if (!page) return;
       e.preventDefault();

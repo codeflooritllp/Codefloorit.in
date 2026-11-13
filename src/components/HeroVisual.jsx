@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { ArrowRight, X } from "lucide-react";
 import { INTRO, INTRO_SEEN_KEY } from "../data/sukaram";
 import Robot from "./Robot";
+import { introDelay } from "../lib/motion";
 
 /* Hero stage: Sukaram, the Codefloor IT robot, inside orbital rings, with floating glass
    interface panels. He introduces the company to first-time visitors in a speech bubble
@@ -161,7 +162,7 @@ export default function HeroVisual() {
     const io = new IntersectionObserver(
       ([e]) => {
         clearTimeout(t);
-        if (e.isIntersecting) t = setTimeout(start, 1200);
+        if (e.isIntersecting) t = setTimeout(start, 1200 + introDelay());
       },
       { threshold: 0.98, rootMargin: "0px 0px -90px 0px" } // the whole stage plus the bubble hanging below it
     );

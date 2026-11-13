@@ -53,6 +53,8 @@ function measure() {
   ticking = false;
   const vh = window.innerHeight;
   const unit = (n) => Math.min(1, Math.max(0, n));
+  // read every rect first, then write: a style write between two reads forces a fresh layout per element
+  const updates = [];
   tracked.forEach(({ mode, cb }, el) => {
     const r = el.getBoundingClientRect();
     if (r.bottom < -200 || r.top > vh + 200) return;
@@ -61,16 +63,45 @@ function measure() {
     else if (mode === "pin") p = r.height > vh ? unit(-r.top / (r.height - vh)) : 0;
     else if (mode === "enter") p = unit((vh - r.top) / (vh * 0.8));
     else p = (vh / 2 - (r.top + r.height / 2)) / (vh / 2 + r.height / 2);
+    updates.push([el, cb, p]);
+  });
+  for (const [el, cb, p] of updates) {
     el.style.setProperty("--p", p.toFixed(3));
     cb.current?.(p);
-  });
+  }
 }
 
 function onScroll() {
-  if (ticking) return;
+  // while Lenis animates, it calls measure() in the same frame it moves the page (see below)
+  if (ticking || lenis?.isScrolling === "smooth") return;
   ticking = true;
   requestAnimationFrame(measure);
 }
+
+/* ---------- Smooth scrolling (Lenis) ----------
+   Desktop wheel and trackpad only: touch keeps native scrolling. Lenis moves the real window
+   scroll position, so sticky scenes, IntersectionObservers and scroll listeners work as before. */
+
+let lenis = null;
+
+export function initSmoothScroll() {
+  return import("lenis").then(({ default: Lenis }) => {
+    lenis = new Lenis({ autoRaf: true, lerp: 0.1, wheelMultiplier: 0.8, allowNestedScroll: true });
+    // progress vars update in the frame the page moves; via the scroll event they lag one frame behind
+    lenis.on("scroll", () => tracked.size && measure());
+  }).catch(() => {}); // a failed download just leaves native scrolling
+}
+
+/** Scrolls to a y offset or an element, through Lenis when it is running. */
+export function scrollToTarget(target, { immediate = false } = {}) {
+  if (lenis) return lenis.scrollTo(target, { immediate, force: true });
+  const behavior = immediate ? "instant" : "auto"; // "auto" follows the stylesheet (smooth unless reduced motion)
+  if (typeof target === "number") window.scrollTo({ top: target, behavior });
+  else target.scrollIntoView({ behavior });
+}
+
+/** Stops wheel scrolling of the page (an open menu), or restarts it. */
+export const lockScroll = (on) => lenis && (on ? lenis.stop() : lenis.start());
 
 export function useScrollProgress(mode = "through", onProgress) {
   const ref = useRef(null);
@@ -212,4 +243,10 @@ export function useScrollBar() {
     };
   }, []);
   return ref;
+}
+
+/** Milliseconds the brand intro (inline script in index.html) still covers the page, if it is playing. */
+export function introDelay() {
+  const c = document.documentElement.classList;
+  return c.contains("has-intro") && !c.contains("intro-skip") ? 2450 : 0;
 }
