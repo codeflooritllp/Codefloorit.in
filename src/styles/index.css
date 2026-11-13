@@ -1985,6 +1985,8 @@ a.alink:hover svg, .card:hover span.alink svg { transform: translateX(4px); }
     transform: translate3d(0, calc(var(--p, 0) * -120px), 0) scale(calc(1 - var(--p, 0) * 0.06));
     opacity: calc(1 - var(--p, 0) * 2.1);
   }
+  /* their own compositor layers: zooming the robot to 2.6x otherwise re-rasterised it every scroll frame */
+  .hero__copy, .hero__visual { will-change: transform, opacity; }
   .hero__visual {
     transform: translate3d(calc(var(--p, 0) * -20vw), calc(var(--p, 0) * 5vh), 0) scale(calc(1 + var(--p, 0) * 1.6));
     opacity: calc(2.7 - var(--p, 0) * 2.9);

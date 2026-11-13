@@ -599,6 +599,18 @@ function morph(scene) {
   const build = [null, hexShape, globeShape, screenShape, helixShape, ringShape];
   const shapes = [galaxy];
   const shape = (i) => (shapes[i] ??= build[i](N));
+  // build the other shapes in idle time, one per idle period: built inside a frame the first time
+  // scrolling reached them, each one stalled that frame mid-scroll
+  const idle = window.requestIdleCallback ?? ((fn) => setTimeout(fn, 200));
+  let warming = 0;
+  const warm = (i) => {
+    if (i >= build.length) return;
+    warming = idle(() => {
+      shape(i);
+      warm(i + 1);
+    });
+  };
+  warm(1);
   const OFFSET_X = [3.6, 4.4, 4.6, 4.2, 4.8, 4.4]; // keep each shape to the right of the copy
 
   const inner = new Color(0xeafcff);
@@ -696,6 +708,7 @@ function morph(scene) {
     core.material.opacity = Math.max(0, 1 - cur * 2) * (0.85 + Math.sin(t * 1.4) * 0.15);
   };
   update.dispose = () => {
+    (window.cancelIdleCallback ?? clearTimeout)(warming);
     sized.disconnect();
     window.removeEventListener("scroll", onScroll);
   };
@@ -709,7 +722,8 @@ const CAMERA_Z = { cluster: 17, laptop: 11, hexes: 19, windows: 15, rings: 22, m
 export function mount(canvas, kind) {
   let renderer;
   try {
-    renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: "high-performance" });
+    // morph is soft additive points: multisampling a full-screen canvas buys it nothing
+    renderer = new WebGLRenderer({ canvas, alpha: true, antialias: kind !== "morph", powerPreference: "high-performance" });
   } catch {
     return null;
   }
