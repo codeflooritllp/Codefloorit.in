@@ -27,11 +27,8 @@ document.querySelectorAll(".reveal").forEach((el) => {
   if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add("is-in");
 });
 html.classList.add("anim");
-// pointer effects (and anime.js with them) only load where they run: desktop, motion allowed
-if (canAnimate() && finePointer()) {
-  import("./lib/fx").then((m) => m.initFx());
-  initSmoothScroll();
-}
+// smooth scrolling only where it runs: desktop, motion allowed (pointer effects start in App, after hydration)
+if (canAnimate() && finePointer()) initSmoothScroll();
 
 // Production pages are prerendered (scripts/prerender.mjs) and hydrated; dev starts empty.
 if (root.firstElementChild) hydrateRoot(root, app);

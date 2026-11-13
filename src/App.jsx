@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Assistant from "./components/Assistant";
 import Home from "./pages/Home";
-import { canAnimate, scrollToTarget, useScrollBar, useSpotlight } from "./lib/motion";
+import { canAnimate, finePointer, scrollToTarget, useScrollBar, useSpotlight } from "./lib/motion";
 
 /* After a deploy, a tab still running the old build asks for page files that no longer exist.
    Load the page fresh instead of showing a blank screen (at most once a minute, so an outage cannot loop). */
@@ -44,7 +44,8 @@ function useRouteScroll() {
     first.current = false;
     if (hash) {
       const el = document.getElementById(decodeURIComponent(hash.slice(1)));
-      return el && scrollToTarget(el, { immediate: initial });
+      if (el) scrollToTarget(el, { immediate: initial });
+      return;
     }
     if (initial) return;
     document.documentElement.classList.add("navd"); // enables the page-enter animation after the first load
@@ -73,7 +74,7 @@ function usePageExit() {
       if (url.pathname === location.pathname && url.hash) {
         e.preventDefault();
         const el = document.getElementById(decodeURIComponent(url.hash.slice(1)));
-        if (url.hash !== location.hash) navigate(url.hash);
+        if (url.hash !== location.hash) navigate(url.search + url.hash);
         else if (el) scrollToTarget(el);
         return;
       }
@@ -91,6 +92,17 @@ function usePageExit() {
       clearTimeout(timer);
     };
   }, [navigate]);
+}
+
+/* Pointer effects rewrite text nodes (the "decode" hover), so they start only once the page has
+   hydrated: before, a slow hydration found changed text and threw (React error #418). Rendered
+   inside the page's Suspense boundary, so its effect waits for a lazy page too. They (and
+   anime.js) load only where they run: desktop, motion allowed. initFx runs once. */
+function PointerFx() {
+  useEffect(() => {
+    if (canAnimate() && finePointer()) import("./lib/fx").then((m) => m.initFx());
+  }, []);
+  return null;
 }
 
 export default function App() {
@@ -122,6 +134,7 @@ export default function App() {
             <Route path="/terms" element={<Legal kind="terms" />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <PointerFx />
           </div>
         </Suspense>
       </main>

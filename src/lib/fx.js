@@ -46,8 +46,8 @@ function nudge(icon) {
 }
 
 export function initFx() {
-  if (!canAnimate() || !finePointer()) return;
   const html = document.documentElement;
+  if (!canAnimate() || !finePointer() || html.classList.contains("fx")) return; // once (StrictMode runs effects twice)
   html.classList.add("fx");
 
   const glow = document.createElement("div");
