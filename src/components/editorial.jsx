@@ -89,8 +89,9 @@ export const slugify = (s) =>
     .replace(/^-|-$/g, "");
 
 /** The portfolio as full-height panels. On wide screens the page pins and the panels
-    travel sideways as you scroll down; on phones and tablets they are a native swipe
-    carousel (CSS scroll snap) with dots that follow the swipe and jump to a project. */
+    travel sideways as you scroll down (.is-pinned); everywhere else, including reduced
+    motion, they are a native swipe carousel (CSS scroll snap) with dots that follow the
+    swipe and jump to a project. */
 export function HorizontalShowcase({ projects }) {
   const [current, setCurrent] = useState(0);
   const track = useRef(null);
@@ -110,6 +111,9 @@ export function HorizontalShowcase({ projects }) {
   const ref = useGsap((gsap, ScrollTrigger, el) => {
     const mm = gsap.matchMedia();
     mm.add("(min-width: 900px) and (min-height: 600px)", () => {
+      // the sideways layout exists only while pinned: without the pin it is the swipe carousel
+      el.classList.add("is-pinned");
+      ScrollTrigger.refresh();
       const track = el.querySelector(".hshow__track");
       const distance = () => track.scrollWidth - window.innerWidth;
       const tween = gsap.to(track, {
