@@ -1,7 +1,7 @@
 import { useSeo, breadcrumbLd, crumbs, itemListLd } from "../lib/seo";
 import { projects } from "../data/projects";
 import { CtaBand, PageHero } from "../components/ui";
-import { ProjectCard } from "../components/cards";
+import { BigWord, HorizontalShowcase } from "../components/editorial";
 
 const trail = crumbs({ name: "Our Work", path: "/work" });
 
@@ -24,13 +24,18 @@ export default function Work() {
         title="Selected Work & Digital Experiences"
         sub="Real projects, described as they are — including what is still in development."
       />
-      <section className="section tint">
+      <section className="section work-intro">
+        <BigWord>Selected</BigWord>
         <div className="container">
-          <div className="grid grid--3">
-            {projects.map((p, i) => (
-              <ProjectCard key={p.slug} project={p} index={i} />
-            ))}
-          </div>
+          <p className="lede">
+            <em>Every project here is real.</em> Scroll through each one, then open its case study for the
+            challenge, the approach and where it stands today.
+          </p>
+        </div>
+      </section>
+      <HorizontalShowcase projects={projects} />
+      <section className="section section--tight">
+        <div className="container">
           <p className="notice notice--plain">
             Completed projects show screenshots of the delivered websites. Projects still in development show an
             illustrative layout mockup, not a product screenshot.

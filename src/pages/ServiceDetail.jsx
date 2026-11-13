@@ -5,6 +5,8 @@ import { getService, services } from "../data/services";
 import { projects } from "../data/projects";
 import { ArrowLink, Btn, CtaBand, FaqList, PageHero, Reveal, SectionHeading } from "../components/ui";
 import { ProjectCard } from "../components/cards";
+import { BigWord, MediaReveal, Stagger } from "../components/editorial";
+import ServiceGlyph from "../components/ServiceGlyph";
 import NotFound from "./NotFound";
 
 export default function ServiceDetail() {
@@ -34,12 +36,18 @@ function Detail({ s }) {
         </div>
       </PageHero>
 
-      <section className="section">
+      <section className="section sdintro">
+        <BigWord>{s.title.split(" ")[0]}</BigWord>
         <div className="container split">
-          <Reveal>
-            <span className="icon-tile icon-tile--lg"><Icon size={30} aria-hidden="true" /></span>
-            <p className="lead">{s.intro}</p>
-          </Reveal>
+          <div>
+            <Reveal>
+              <span className="icon-tile icon-tile--lg"><Icon size={30} aria-hidden="true" /></span>
+              <p className="lead">{s.intro}</p>
+            </Reveal>
+            <MediaReveal className="sdintro__art">
+              <div className="sdintro__stage" aria-hidden="true"><ServiceGlyph slug={s.slug} /></div>
+            </MediaReveal>
+          </div>
           <Reveal delay={100} className="card spot panel">
             <h2>What we build</h2>
             <ul className="checks">
@@ -54,15 +62,15 @@ function Detail({ s }) {
       <section className="section tint">
         <div className="container">
           <SectionHeading eyebrow="Approach" title="How we handle it" />
-          <div className="grid grid--3">
+          <Stagger as="ol" className="alist">
             {s.approach.map((a, i) => (
-              <Reveal key={a.h} delay={i * 90} className="card spot panel">
-                <span className="plist__n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <li key={a.h}>
+                <span className="alist__n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
                 <h3>{a.h}</h3>
                 <p>{a.p}</p>
-              </Reveal>
+              </li>
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
 

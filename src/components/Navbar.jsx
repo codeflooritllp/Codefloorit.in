@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router";
-import { Menu, X } from "lucide-react";
+import { m } from "motion/react";
 import { NAV } from "../data/site";
 import { Btn, Logo } from "./ui";
 import { lockScroll } from "../lib/motion";
@@ -39,7 +39,13 @@ export default function Navbar() {
         <nav aria-label="Main" className="nav__links">
           {NAV.map((n) => (
             <NavLink key={n.to} to={n.to} end={n.to === "/"} className="nav__link">
-              {n.label}
+              {({ isActive }) => (
+                <>
+                  {n.label}
+                  {/* one indicator, shared across links: it glides to the new page's link */}
+                  {isActive && <m.span layoutId="nav-ind" className="nav__ind" transition={{ type: "spring", stiffness: 420, damping: 36 }} />}
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
@@ -54,7 +60,7 @@ export default function Navbar() {
           aria-label={open ? "Close menu" : "Open menu"}
           onClick={() => setOpen((o) => !o)}
         >
-          {open ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
+          <span className="burger" aria-hidden="true"><i /><i /><i /></span>
         </button>
       </div>
 

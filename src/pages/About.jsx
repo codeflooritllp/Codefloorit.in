@@ -2,6 +2,7 @@ import { useSeo, breadcrumbLd, crumbs } from "../lib/seo";
 import { PRINCIPLES } from "../data/site";
 import { CtaBand, PageHero, Reveal, SectionHeading } from "../components/ui";
 import { ProcessSection, WhySection } from "../components/sections";
+import { BigWord, Stagger } from "../components/editorial";
 
 const trail = crumbs({ name: "About Us", path: "/about" });
 
@@ -24,7 +25,8 @@ export default function About() {
         sub="Codefloor IT is a technology-focused development company that turns business requirements into practical, well-built digital products."
       />
 
-      <section className="section">
+      <section className="section about-belief">
+        <BigWord>Engineering</BigWord>
         <div className="container split split--top">
           <SectionHeading eyebrow="What we believe" title="Software should fit the business, not the other way around" />
           <Reveal delay={100} className="prose">
@@ -50,15 +52,15 @@ export default function About() {
       <section className="section tint">
         <div className="container">
           <SectionHeading eyebrow="Principles" title="What guides every project" />
-          <div className="grid grid--3">
+          <Stagger as="ol" className="alist alist--2">
             {PRINCIPLES.map((p, i) => (
-              <Reveal key={p.title} delay={(i % 3) * 90} className="card spot panel">
-                <span className="plist__n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <li key={p.title}>
+                <span className="alist__n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
                 <h3>{p.title}</h3>
                 <p>{p.text}</p>
-              </Reveal>
+              </li>
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
 

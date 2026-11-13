@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router";
+import { LazyMotion, MotionConfig } from "motion/react";
 import "./styles/index.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -94,6 +95,10 @@ function usePageExit() {
   }, [navigate]);
 }
 
+/* Framer Motion handles small component transitions (nav indicator, form messages); its
+   animation code loads after the page, and `strict` keeps components on the light `m` API. */
+const motionFeatures = () => import("motion/react").then(({ domAnimation }) => domAnimation);
+
 /* Pointer effects rewrite text nodes (the "decode" hover), so they start only once the page has
    hydrated: before, a slow hydration found changed text and threw (React error #418). Rendered
    inside the page's Suspense boundary, so its effect waits for a lazy page too. They (and
@@ -112,34 +117,36 @@ export default function App() {
   const bar = useScrollBar();
   const { pathname } = useLocation();
   return (
-    <>
-      <div className="progress" aria-hidden="true"><i ref={bar} /></div>
-      <a href="#main" className="skip">Skip to content</a>
-      <Navbar />
-      <main id="main" tabIndex={-1}>
-        <Suspense fallback={<div className="route-fallback" />}>
-          <div className="page" key={pathname}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/services/:slug" element={<ServiceDetail />} />
-            <Route path="/solutions" element={<Solutions />} />
-            <Route path="/work" element={<Work />} />
-            <Route path="/work/:slug" element={<ProjectDetail />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/insights" element={<Insights />} />
-            <Route path="/insights/:slug" element={<ArticleDetail />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/privacy-policy" element={<Legal kind="privacy" />} />
-            <Route path="/terms" element={<Legal kind="terms" />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <PointerFx />
-          </div>
-        </Suspense>
-      </main>
-      <Footer />
-      <Assistant />
-    </>
+    <LazyMotion features={motionFeatures} strict>
+      <MotionConfig reducedMotion="user">
+        <div className="progress" aria-hidden="true"><i ref={bar} /></div>
+        <a href="#main" className="skip">Skip to content</a>
+        <Navbar />
+        <main id="main" tabIndex={-1}>
+          <Suspense fallback={<div className="route-fallback" />}>
+            <div className="page" key={pathname}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/services/:slug" element={<ServiceDetail />} />
+              <Route path="/solutions" element={<Solutions />} />
+              <Route path="/work" element={<Work />} />
+              <Route path="/work/:slug" element={<ProjectDetail />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/insights" element={<Insights />} />
+              <Route path="/insights/:slug" element={<ArticleDetail />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/privacy-policy" element={<Legal kind="privacy" />} />
+              <Route path="/terms" element={<Legal kind="terms" />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <PointerFx />
+            </div>
+          </Suspense>
+        </main>
+        <Footer />
+        <Assistant />
+      </MotionConfig>
+    </LazyMotion>
   );
 }

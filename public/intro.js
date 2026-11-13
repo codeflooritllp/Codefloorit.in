@@ -22,8 +22,8 @@
       t = setTimeout(done, 400);
     };
     ev.forEach(function (e) { addEventListener(e, skip, { capture: true, passive: true }); });
-    t = setTimeout(done, 3100);
+    t = setTimeout(done, 2600);
     // the hero's entrance is offset while .has-intro is set; drop it once that entrance has finished
-    setTimeout(function () { h.classList.remove("has-intro", "intro-skip"); }, 5200);
+    setTimeout(function () { h.classList.remove("has-intro", "intro-skip"); }, 4300);
   } catch {}
 })();

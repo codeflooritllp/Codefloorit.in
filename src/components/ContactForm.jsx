@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AnimatePresence, m } from "motion/react";
 import { CircleAlert, CircleCheck, LoaderCircle, Send } from "lucide-react";
 import { CONTACT, whatsappLink } from "../data/site";
 import { services } from "../data/services";
@@ -188,40 +189,47 @@ export default function ContactForm() {
       )}
 
       <output className="cform__status">
+        <AnimatePresence initial={false}>
         {status === "sent" && (
-          <p className="cform__msg cform__msg--ok">
+          <m.p key="sent" {...SLIDE} className="cform__msg cform__msg--ok">
             <CircleCheck size={20} aria-hidden="true" /> Thank you. Your message has been sent and we will reply by email.
-          </p>
+          </m.p>
         )}
         {status === "handoff" && (
-          <p className="cform__msg cform__msg--ok">
+          <m.p key="handoff" {...SLIDE} className="cform__msg cform__msg--ok">
             <CircleCheck size={20} aria-hidden="true" />
             <span>
               WhatsApp should now be open with your message ready — press send there. If it did not open,{" "}
               <a href={whatsappLink(summary(withParts(form)))} target="_blank" rel="noopener noreferrer">open WhatsApp</a> or email{" "}
               <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>.
             </span>
-          </p>
+          </m.p>
         )}
         {status === "failed" && (
-          <p className="cform__msg cform__msg--err">
+          <m.p key="failed" {...SLIDE} className="cform__msg cform__msg--err">
             <CircleAlert size={20} aria-hidden="true" />
             <span>
               Sorry, your message could not be sent. Please try again, or email{" "}
               <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> directly.
             </span>
-          </p>
+          </m.p>
         )}
+        </AnimatePresence>
       </output>
     </form>
   );
 }
 
+const SLIDE = { initial: { opacity: 0, y: -6, height: 0 }, animate: { opacity: 1, y: 0, height: "auto" }, exit: { opacity: 0, y: -6, height: 0 }, transition: { duration: 0.25, ease: [0.2, 0.7, 0.2, 1] } };
+
 function FieldError({ id, msg }) {
-  if (!msg) return null;
   return (
-    <p className="field__err" id={id}>
-      <CircleAlert size={15} aria-hidden="true" /> {msg}
-    </p>
+    <AnimatePresence initial={false}>
+      {msg && (
+        <m.p className="field__err" id={id} key="err" {...SLIDE}>
+          <CircleAlert size={15} aria-hidden="true" /> {msg}
+        </m.p>
+      )}
+    </AnimatePresence>
   );
 }

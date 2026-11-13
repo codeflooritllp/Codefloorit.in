@@ -3,6 +3,8 @@ import { useSeo, breadcrumbLd, crumbs, SITE_URL } from "../lib/seo";
 import { services } from "../data/services";
 import { ArrowLink, CtaBand, PageHero, Reveal } from "../components/ui";
 import { ProcessSection } from "../components/sections";
+import { BigWord } from "../components/editorial";
+import ServiceGlyph from "../components/ServiceGlyph";
 
 const trail = crumbs({ name: "Services", path: "/services" });
 
@@ -38,7 +40,8 @@ export default function Services() {
         sub="Practical engineering and thoughtful design for businesses building their next stage of digital growth."
       />
 
-      <section className="section">
+      <section className="section sindex">
+        <BigWord>Craft</BigWord>
         <div className="container srows">
           {services.map((s, i) => {
             const Icon = s.icon;
@@ -55,6 +58,7 @@ export default function Services() {
                     Explore<span className="sr-only"> {s.title}</span>
                   </ArrowLink>
                 </div>
+                <div className="srow__art" aria-hidden="true"><ServiceGlyph slug={s.slug} /></div>
                 <ul className="checks">
                   {s.build.slice(0, 4).map((b) => (
                     <li key={b}><Check size={16} aria-hidden="true" /> {b}</li>
