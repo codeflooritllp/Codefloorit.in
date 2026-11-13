@@ -39,6 +39,28 @@ export default function Assistant() {
   const hinted = useRef(new Set());
   const hintsOff = useRef(false);
   const bye = useRef(0);
+  const root = useRef(null);
+
+  // On phones the button steps aside while the visitor scrolls down through content, so it never
+  // sits on the text being read, and returns on scrolling up or at the end of the page.
+  // An open panel or a tip on screen keeps it in place.
+  useEffect(() => {
+    const el = root.current;
+    const phone = window.matchMedia("(max-width: 640px)");
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (Math.abs(y - lastY) < 6) return;
+      const end = y + window.innerHeight > document.documentElement.scrollHeight - 160;
+      el.classList.toggle("asst--away", phone.matches && !open && !hint && y > lastY && y > 120 && !end);
+      lastY = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      el.classList.remove("asst--away");
+    };
+  }, [open, hint]);
 
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -85,7 +107,7 @@ export default function Assistant() {
   const pose = act ?? (open ? "greet" : hint ? "point" : mood);
 
   return (
-    <div className="asst">
+    <div className="asst" ref={root}>
       {open && (
         <PanelBoundary>
           <Suspense fallback={<output className="asst__panel asst__panel--note">Waking Sukaram up…</output>}>
