@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { canAnimate, useScrollProgress } from "../lib/motion";
 import { Ambient, Reveal, SectionHeading } from "./ui";
 import ContactForm from "./ContactForm";
+import { StageArt } from "./Illustrations";
 import { ZoomIn } from "./scenes";
 import Scene3D from "./Scene3D";
 
@@ -80,6 +81,7 @@ export function ProcessTimeline() {
             <span className="tl__dot" aria-hidden="true" />
             <div className="tl__card">
               <span className="tl__ok" aria-hidden="true"><Check size={14} strokeWidth={3} /></span>
+              <StageArt stage={s.title} />
               <span className="tl__n">{s.n}</span>
               <h3>{s.title}</h3>
               <p>{s.text}</p>

@@ -3,6 +3,7 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 import "@fontsource-variable/inter/wght.css";
 import "@fontsource-variable/space-grotesk/wght.css";
+import "@fontsource/instrument-serif/latin-400-italic.css";
 import "lenis/dist/lenis.css";
 import App from "./App";
 import { canAnimate, finePointer, initSmoothScroll } from "./lib/motion";

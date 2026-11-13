@@ -6,12 +6,13 @@ import { getService } from "../data/services";
 import { getProject } from "../data/projects";
 import { ArrowLink, CtaBand, FaqList, PageHero } from "../components/ui";
 import { ArticleCard, formatDate } from "./Insights";
+import { MediaReveal, Toc, slugify } from "../components/editorial";
 import NotFound from "./NotFound";
 
 function Block({ b }) {
   switch (b.type) {
     case "h2":
-      return <h2>{b.text}</h2>;
+      return <h2 id={slugify(b.text)}>{b.text}</h2>;
     case "h3":
       return <h3>{b.text}</h3>;
     case "ul":
@@ -57,6 +58,7 @@ function Detail({ a }) {
   const project = a.relatedProject && getProject(a.relatedProject);
   const related = a.related.map(getArticle).filter(Boolean);
   const image = `/og/${a.slug}.png`; // drawn by scripts/og-images.py
+  const toc = a.body.filter((b) => b.type === "h2").map((b) => ({ id: slugify(b.text), text: b.text }));
 
   useSeo({
     title: a.seoTitle,
@@ -82,7 +84,14 @@ function Detail({ a }) {
       </PageHero>
 
       <article className="section">
-        <div className="container container--narrow">
+        <div className="container article">
+          <aside className="article__aside">
+            <Toc items={toc} label="In this guide" />
+          </aside>
+          <div className="article__main">
+          <MediaReveal className="article__cover">
+            <img src={image} width="1200" height="630" alt="" decoding="async" />
+          </MediaReveal>
           <div className="prose">
             {a.body.map((b, i) => (
               <Block key={i} b={b} />
@@ -101,6 +110,7 @@ function Detail({ a }) {
             {project && <li><ArrowLink to={`/work/${project.slug}`}>Project: {project.title}</ArrowLink></li>}
             <li><ArrowLink to="/contact">Talk to us about your project</ArrowLink></li>
           </ul>
+          </div>
         </div>
       </article>
 

@@ -84,12 +84,17 @@ function onScroll() {
 
 let lenis = null;
 
+/** Resolves with the Lenis instance once it runs (null where it does not: touch, reduced motion). */
+export let lenisReady = Promise.resolve(null);
 export function initSmoothScroll() {
-  return import("lenis").then(({ default: Lenis }) => {
-    lenis = new Lenis({ autoRaf: true, lerp: 0.1, wheelMultiplier: 0.8, allowNestedScroll: true });
-    // progress vars update in the frame the page moves; via the scroll event they lag one frame behind
-    lenis.on("scroll", () => tracked.size && measure());
-  }).catch(() => {}); // a failed download just leaves native scrolling
+  return (lenisReady = import("lenis")
+    .then(({ default: Lenis }) => {
+      lenis = new Lenis({ autoRaf: true, lerp: 0.1, wheelMultiplier: 0.8, allowNestedScroll: true });
+      // progress vars update in the frame the page moves; via the scroll event they lag one frame behind
+      lenis.on("scroll", () => tracked.size && measure());
+      return lenis;
+    })
+    .catch(() => null)); // a failed download just leaves native scrolling
 }
 
 /** Scrolls to a y offset or an element, through Lenis when it is running. */
@@ -248,5 +253,5 @@ export function useScrollBar() {
 /** Milliseconds the brand intro (inline script in index.html) still covers the page, if it is playing. */
 export function introDelay() {
   const c = document.documentElement.classList;
-  return c.contains("has-intro") && !c.contains("intro-skip") ? 2450 : 0;
+  return c.contains("has-intro") && !c.contains("intro-skip") ? 2000 : 0;
 }

@@ -1,6 +1,7 @@
 import { useSeo, breadcrumbLd, crumbs } from "../lib/seo";
 import { CONTACT } from "../data/site";
 import { PageHero } from "../components/ui";
+import { Toc, slugify } from "../components/editorial";
 
 const CONTENT = {
   privacy: {
@@ -40,14 +41,19 @@ export default function Legal({ kind }) {
     <>
       <PageHero crumbs={trail} title={c.title} sub={c.desc} />
       <section className="section">
-        <div className="container container--narrow prose">
-          {c.blocks.map(([h, p]) => (
-            <div key={h}>
-              <h2>{h}</h2>
-              <p>{p}</p>
-            </div>
-          ))}
-          <p className="prose__meta">Last updated: October 2026.</p>
+        <div className="container article">
+          <aside className="article__aside">
+            <Toc items={c.blocks.map(([h]) => ({ id: slugify(h), text: h }))} label="Sections" />
+          </aside>
+          <div className="article__main prose legal">
+            {c.blocks.map(([h, p], i) => (
+              <section key={h} aria-labelledby={slugify(h)}>
+                <h2 id={slugify(h)}><span className="legal__n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>{h}</h2>
+                <p>{p}</p>
+              </section>
+            ))}
+            <p className="prose__meta">Last updated: October 2026.</p>
+          </div>
         </div>
       </section>
     </>

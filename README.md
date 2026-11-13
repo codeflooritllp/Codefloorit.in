@@ -28,7 +28,7 @@ from `lib/motion.js`, not `window.scrollTo`, or the two will fight; tune the fee
 
 The brand intro plays on every full load of the homepage (not on in-app navigation), never with
 reduced motion. `public/intro.js`, loaded at the top of `<body>` (not inline: the CSP blocks inline scripts),
-injects it so it paints before the bundle loads; its 3s timeline is CSS ("Intro" in
+injects it so it paints before the bundle loads; its 2.5s timeline is CSS ("Intro" in
 `src/styles/index.css`). Any key, click, wheel or touch skips it.
 
 The robot (`components/Robot.jsx`) is an SVG with CSS poses. Sections choose its pose with

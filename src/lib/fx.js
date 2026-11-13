@@ -158,24 +158,12 @@ export function initFx() {
     { passive: true }
   );
 
-  // section headings decode once, word by word, when they scroll into view
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        io.unobserve(entry.target);
-        entry.target.querySelectorAll(".sw > span").forEach((word, i) => setTimeout(() => scramble(word), 120 + i * 70));
-      }
-    },
-    { threshold: 0.6 }
-  );
   const watch = (root) => {
-    root.querySelectorAll?.(".shead__title").forEach((h) => io.observe(h));
     // page entrance: the hero eyebrow decodes once, alongside the CSS rise
     root.querySelectorAll?.(".hero .eyebrow, .phero .eyebrow").forEach((el) => setTimeout(() => scramble(el), 300 + introDelay()));
   };
   watch(document);
-  // pages rendered later by the router bring new headings
+  // pages rendered later by the router bring new eyebrows
   new MutationObserver((records) => records.forEach((r) => r.addedNodes.forEach(watch))).observe(document.getElementById("root"), {
     childList: true,
     subtree: true,
