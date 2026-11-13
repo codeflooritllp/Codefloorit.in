@@ -2,7 +2,8 @@ import { useSeo, breadcrumbLd, crumbs } from "../lib/seo";
 import { PRINCIPLES } from "../data/site";
 import { CtaBand, PageHero, Reveal, SectionHeading } from "../components/ui";
 import { ProcessSection, WhySection } from "../components/sections";
-import { BigWord, Stagger } from "../components/editorial";
+import { BigWord, MediaReveal, Stagger } from "../components/editorial";
+import { Workspace } from "../components/Illustrations";
 
 const trail = crumbs({ name: "About Us", path: "/about" });
 
@@ -28,7 +29,12 @@ export default function About() {
       <section className="section about-belief">
         <BigWord>Engineering</BigWord>
         <div className="container split split--top">
-          <SectionHeading eyebrow="What we believe" title="Software should fit the business, not the other way around" />
+          <div>
+            <SectionHeading eyebrow="What we believe" title="Software should fit the business, not the other way around" />
+            <MediaReveal className="about-art">
+              <Workspace />
+            </MediaReveal>
+          </div>
           <Reveal delay={100} className="prose">
             <p>
               Businesses often end up bending their work around generic software, or commissioning
