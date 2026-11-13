@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { canAnimate, finePointer } from "../lib/motion";
+import { canAnimate, finePointer, introDelay } from "../lib/motion";
 
 /* Decorative WebGL canvas. three.js is only downloaded on desktop-sized screens with a
    mouse, without reduced motion or data saver, and only once the canvas is near the
@@ -34,13 +34,19 @@ export default function Scene3D({ kind = "cluster" }) {
       },
       { rootMargin: "200px" }
     );
-    // wait for the page to settle so the 3D code never competes with first paint
+    // Setting up the scene is one ~0.4s main-thread task. Start it only after the brand intro and
+    // the hero's entrance have played (they run ~1.5s after the intro), then in idle time: while
+    // they ran, the idle deadline fired mid-entrance and froze it for that long.
     const idle = window.requestIdleCallback ?? ((fn) => setTimeout(fn, 600));
-    // (with a deadline: constant animation elsewhere can starve idle time indefinitely)
-    const handle = idle(() => io.observe(canvas), { timeout: 2000 });
+    let handle = 0;
+    const settle = setTimeout(() => {
+      // (with a deadline: constant animation elsewhere can starve idle time indefinitely)
+      handle = idle(() => io.observe(canvas), { timeout: 2000 });
+    }, introDelay() + 1600);
 
     return () => {
       dead = true;
+      clearTimeout(settle);
       (window.cancelIdleCallback ?? clearTimeout)(handle);
       io.disconnect();
       api?.dispose();
