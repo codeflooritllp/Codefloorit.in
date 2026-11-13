@@ -107,6 +107,7 @@
             el.remove();
           };
           var skip = function () {
+            if (h.classList.contains("intro-skip")) return;
             h.classList.add("intro-skip");
             clearTimeout(t);
             t = setTimeout(done, 400);
