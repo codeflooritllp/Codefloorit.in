@@ -7,6 +7,7 @@ import "@fontsource/instrument-serif/latin-400-italic.css";
 import "lenis/dist/lenis.css";
 import App from "./App";
 import { canAnimate, finePointer, initSmoothScroll } from "./lib/motion";
+import { trackClicks } from "./lib/track";
 
 const root = document.getElementById("root");
 const app = (
@@ -30,6 +31,8 @@ document.querySelectorAll(".reveal").forEach((el) => {
 html.classList.add("anim");
 // smooth scrolling only where it runs: desktop, motion allowed (pointer effects start in App, after hydration)
 if (canAnimate() && finePointer()) initSmoothScroll();
+
+trackClicks();
 
 // Production pages are prerendered (scripts/prerender.mjs) and hydrated; dev starts empty.
 if (root.firstElementChild) hydrateRoot(root, app);

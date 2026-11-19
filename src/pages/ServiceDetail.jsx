@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { useParams } from "react-router";
 import { Check } from "lucide-react";
 import { useSeo, breadcrumbLd, crumbs, faqLd, serviceLd } from "../lib/seo";
+import { track } from "../lib/track";
 import { getService, services } from "../data/services";
 import { projects } from "../data/projects";
 import { getArticle } from "../data/insights";
@@ -29,6 +31,7 @@ function Detail({ s }) {
     path,
     jsonLd: [breadcrumbLd(trail), serviceLd({ name: s.title, description: s.short, path }), faqLd(s.faqs)],
   });
+  useEffect(() => track("service_view", { service_name: s.title, service_slug: s.slug }), [s.title, s.slug]);
 
   return (
     <>

@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { Link, useParams } from "react-router";
 import { ArrowUpRight, Check } from "lucide-react";
 import { useSeo, breadcrumbLd, creativeWorkLd, crumbs } from "../lib/seo";
+import { track } from "../lib/track";
 import { getProject, projects } from "../data/projects";
 import { getArticle } from "../data/insights";
 import { ArrowLink, CtaBand, PageHero, Reveal, StatusBadge } from "../components/ui";
@@ -24,6 +26,7 @@ function Detail({ p }) {
     path,
     jsonLd: [breadcrumbLd(trail), creativeWorkLd({ title: p.title, description: p.description, path, category: p.category })],
   });
+  useEffect(() => track("portfolio_view", { project_name: p.title, project_status: p.status }), [p.title, p.status]);
 
   const chapters = [
     ["Overview", [p.overview]],
