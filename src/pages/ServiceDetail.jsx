@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 import { useSeo, breadcrumbLd, crumbs, faqLd, serviceLd } from "../lib/seo";
 import { getService, services } from "../data/services";
 import { projects } from "../data/projects";
+import { getArticle } from "../data/insights";
 import { ArrowLink, Btn, CtaBand, FaqList, PageHero, Reveal, SectionHeading } from "../components/ui";
 import { ProjectCard } from "../components/cards";
 import { BigWord, MediaReveal, Stagger } from "../components/editorial";
@@ -19,6 +20,7 @@ function Detail({ s }) {
   const path = `/services/${s.slug}`;
   const trail = crumbs({ name: "Services", path: "/services" }, { name: s.title, path });
   const related = projects.filter((p) => s.projects.includes(p.slug));
+  const reading = (s.reading ?? []).map(getArticle).filter(Boolean);
   const Icon = s.icon;
 
   useSeo({
@@ -59,6 +61,43 @@ function Detail({ s }) {
         </div>
       </section>
 
+      {s.problems && (
+        <section className="section tint">
+          <div className="container split">
+            <div>
+              <SectionHeading title="Problems we solve" />
+              <Reveal>
+                <ul className="checks">
+                  {s.problems.map((p) => (
+                    <li key={p}><Check size={16} aria-hidden="true" /> {p}</li>
+                  ))}
+                </ul>
+              </Reveal>
+            </div>
+            <Reveal delay={100} className="card spot panel">
+              <h2>Technology we use</h2>
+              <ul className="tags" aria-label="Technology">
+                {s.stack.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+              <p className="notice notice--plain">Chosen to fit each project; not every tool is used on every build.</p>
+            </Reveal>
+          </div>
+        </section>
+      )}
+
+      {s.local && (
+        <section className="section">
+          <div className="container container--narrow">
+            <SectionHeading eyebrow="Where we work" title="Working with businesses in Ahmedabad" />
+            <Reveal>
+              <p className="lead">{s.local}</p>
+            </Reveal>
+          </div>
+        </section>
+      )}
+
       <section className="section tint">
         <div className="container">
           <SectionHeading eyebrow="Approach" title="How we handle it" />
@@ -96,7 +135,17 @@ function Detail({ s }) {
 
       <section className="section section--tight">
         <div className="container">
-          <h2 className="h-small">Other services</h2>
+          {reading.length > 0 && (
+            <>
+              <h2 className="h-small">Related reading</h2>
+              <ul className="linkrow">
+                {reading.map((a) => (
+                  <li key={a.slug}><ArrowLink to={`/insights/${a.slug}`}>{a.title}</ArrowLink></li>
+                ))}
+              </ul>
+            </>
+          )}
+          <h2 className={`h-small ${reading.length ? "h-small--gap" : ""}`}>Other services</h2>
           <ul className="linkrow">
             {services.filter((o) => o.slug !== s.slug).map((o) => (
               <li key={o.slug}><ArrowLink to={`/services/${o.slug}`}>{o.title}</ArrowLink></li>
