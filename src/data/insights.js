@@ -61,6 +61,8 @@ export const articles = [
     seoTitle: "What Should a Professional Business Website Include? | Codefloor IT",
     description:
       "The elements that make a business website credible and useful: clear positioning, structured services, trust signals, mobile performance, and an obvious next step.",
+    seoDescription:
+      "What makes a business website credible and useful: clear positioning, structured services, trust signals, mobile performance and a clear next step.",
     date: "2026-02-18",
     readMins: 5,
     body: [

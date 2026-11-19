@@ -4,7 +4,9 @@ import { Blocks, LayoutDashboard, Globe, ShoppingCart, RefreshCw, LifeBuoy } fro
 export const services = [
   {
     slug: "custom-software-development",
-    seoTitle: "Custom Software Development Services",
+    seoTitle: "Custom Software Development in Ahmedabad",
+    seoDescription:
+      "Custom software built around how your business works: CRMs, dashboards, booking and internal tools. Codefloor IT, Ahmedabad. Discuss your project.",
     icon: Blocks,
     title: "Custom Software Development",
     short: "Software tailored to your business workflows and requirements.",
@@ -31,7 +33,9 @@ export const services = [
   },
   {
     slug: "web-application-development",
-    seoTitle: "Custom Web Application Development",
+    seoTitle: "Web Application Development in Ahmedabad",
+    seoDescription:
+      "Web applications for businesses in Ahmedabad and across India: dashboards, customer portals, booking systems and business platforms by Codefloor IT.",
     icon: LayoutDashboard,
     title: "Web Application Development",
     short: "Scalable dashboards, portals, booking systems and business platforms.",
@@ -58,7 +62,9 @@ export const services = [
   },
   {
     slug: "business-website-development",
-    seoTitle: "Business Website Development Services",
+    seoTitle: "Business Website Development in Ahmedabad",
+    seoDescription:
+      "Business websites that explain what you do, build trust and bring in enquiries. Designed and developed by Codefloor IT in Ahmedabad, Gujarat.",
     icon: Globe,
     title: "Business Website Development",
     short: "Professional websites focused on clarity, credibility, usability and conversion.",
@@ -87,7 +93,9 @@ export const services = [
   },
   {
     slug: "ecommerce-development",
-    seoTitle: "E-commerce Website Development",
+    seoTitle: "E-commerce Website Development in Ahmedabad",
+    seoDescription:
+      "E-commerce websites with product catalogs, cart, checkout and online payments, built by Codefloor IT in Ahmedabad for businesses across India.",
     icon: ShoppingCart,
     title: "E-commerce Development",
     short: "Online shopping experiences and commerce systems with suitable payment options.",
@@ -114,7 +122,9 @@ export const services = [
   },
   {
     slug: "website-modernization",
-    seoTitle: "Website Modernization & Redesign",
+    seoTitle: "Website Redesign & Modernization in Ahmedabad",
+    seoDescription:
+      "Redesign an outdated website: faster pages, layouts that work on phones, clearer structure and a maintainable codebase. Codefloor IT, Ahmedabad.",
     icon: RefreshCw,
     title: "Website Modernization",
     short: "Better architecture, performance, usability and maintainability for existing sites.",
@@ -142,7 +152,9 @@ export const services = [
   },
   {
     slug: "maintenance-technical-support",
-    seoTitle: "Website Maintenance & Technical Support",
+    seoTitle: "Website Maintenance & Support in Ahmedabad",
+    seoDescription:
+      "Website maintenance and technical support after launch: fixes, updates and steady improvements from Codefloor IT, a development team in Ahmedabad.",
     icon: LifeBuoy,
     title: "Maintenance & Technical Support",
     short: "Ongoing technical assistance, fixes and improvements after launch.",

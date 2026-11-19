@@ -9,9 +9,9 @@ const trail = crumbs({ name: "About Us", path: "/about" });
 
 export default function About() {
   useSeo({
-    title: "About Codefloor IT — Built on Engineering",
+    title: "About Codefloor IT — Software Company in Ahmedabad",
     description:
-      "Codefloor IT is a technology-focused development company in Ahmedabad, Gujarat. We understand business requirements first, then build practical, maintainable software.",
+      "Codefloor IT is a software and web development company in Ahmedabad, Gujarat. We learn how your business works first, then build practical software.",
     path: "/about",
     pageType: "AboutPage",
     jsonLd: breadcrumbLd(trail),

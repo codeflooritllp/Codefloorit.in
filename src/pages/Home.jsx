@@ -90,9 +90,9 @@ function Hero() {
 
 export default function Home() {
   useSeo({
-    title: "Codefloor IT — Web & Software Development Company in Ahmedabad",
+    title: "Web Development Company in Ahmedabad",
     description:
-      "Codefloor IT is a web and software development company in Ahmedabad, Gujarat, building business websites, web applications, e-commerce stores and custom software.",
+      "Codefloor IT is a web and software development company in Ahmedabad building business websites, web apps, e-commerce stores and custom software.",
     path: "/",
     jsonLd: faqLd(HOME_FAQ),
   });
