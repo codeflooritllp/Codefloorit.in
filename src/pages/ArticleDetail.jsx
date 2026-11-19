@@ -62,7 +62,7 @@ function Detail({ a }) {
 
   useSeo({
     title: a.seoTitle,
-    description: a.description,
+    description: a.seoDescription ?? a.description,
     path,
     type: "article",
     image,

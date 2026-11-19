@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect } from "react";
+import { trackPage } from "./track";
 
 /* Production serves the bare domain and 301-redirects www to it, so canonical URLs use the bare domain. */
 export const SITE_URL = "https://codefloorit.in";
@@ -84,6 +85,7 @@ export function useSeo(cfg) {
       el.text = JSON.stringify(block);
       document.head.appendChild(el);
     });
+    trackPage(); // after the title is set, so GA4 gets this page's title
   }, [key]);
 }
 

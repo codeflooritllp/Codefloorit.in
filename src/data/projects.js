@@ -63,7 +63,7 @@ export const projects = [
       "The result is a clearer, more credible digital front door for the consultancy. Prospective clients get a straightforward route from discovering the practice to understanding its services and making contact, and the team can keep the content current without external help.",
     seoTitle: "Oracle Legal Consultancy — Legal Consultancy Website Development | Codefloor IT",
     seoDescription:
-      "How Codefloor IT designed and developed a professional legal consultancy website with structured content, admin-managed sections, an enquiry flow, and an SEO-friendly structure.",
+      "How Codefloor IT built a legal consultancy website with structured content, admin-managed sections, an enquiry flow and an SEO-friendly structure.",
     seoTopics: [
       "legal consultancy website development",
       "law firm website development",
@@ -130,7 +130,7 @@ export const projects = [
       "Aranya Palace gives the property a polished digital front door and a more organised way to receive and handle bookings — the information a guest needs to choose it, and the structure the team needs to run it.",
     seoTitle: "Aranya Palace — Hotel Website & Booking System Development | Codefloor IT",
     seoDescription:
-      "A case study on the Aranya Palace hotel website and booking platform built by Codefloor IT — room discovery, a booking flow, offers, gallery, and booking management for the property team.",
+      "Aranya Palace hotel website and booking platform by Codefloor IT: room discovery, booking flow, offers, gallery and booking management for staff.",
     seoTopics: [
       "hotel website development",
       "hotel booking website",
@@ -212,7 +212,7 @@ export const projects = [
       "LeadHunter CRM is complete and in use as Codefloor IT's own lead generation tool. It replaces manual registry searches and spreadsheets with one system for discovering, qualifying and following up on new business leads.",
     seoTitle: "LeadHunter CRM — Lead Generation & CRM Software Development | Codefloor IT",
     seoDescription:
-      "LeadHunter CRM, built by Codefloor IT: new-company lead discovery, lead scoring, sales pipeline, tasks and follow-ups, duplicate detection and reporting dashboards in one web-based CRM.",
+      "LeadHunter CRM by Codefloor IT: lead discovery, lead scoring, sales pipeline, follow-ups, duplicate detection and reporting in one web-based CRM.",
     seoTopics: [
       "CRM software development",
       "lead generation software",
@@ -291,7 +291,7 @@ export const projects = [
       "This project is in active development and is not a live production healthcare system. Current work focuses on structured workflows and role-based dashboards for clinics, individual doctors, and multi-doctor practices.",
     seoTitle: "Patient Handling & Doctor Appointment Management System | Codefloor IT",
     seoDescription:
-      "An in-development healthcare management platform by Codefloor IT for patient handling, doctor scheduling, appointment management, and role-based admin, doctor, and patient dashboards.",
+      "An in-development healthcare platform by Codefloor IT for patient handling, doctor scheduling, appointments and role-based dashboards.",
     seoTopics: [
       "patient management software",
       "patient management system",

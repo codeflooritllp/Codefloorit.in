@@ -60,7 +60,7 @@ body {
   overflow-x: clip;
 }
 
-h1, h2, h3 {
+h1, h2, h3, .hero__title {
   margin: 0;
   font-family: var(--font-d);
   font-weight: 650;

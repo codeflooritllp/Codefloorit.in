@@ -6,7 +6,7 @@ When calling the claude-code MCP tool, always pass absolute paths under this pro
 
 ## Stack
 
-React 19 + Vite + React Router, plain CSS, prerendered to static HTML at build time, deployed on Vercel. See `README.md` for details.
+React 19 + Vite + React Router, plain CSS, prerendered to static HTML at build time, deployed on Vercel. One serverless function, `api/contact.js`, emails contact-form enquiries over SMTP (variables in `.env.example`). See `README.md` for details.
 
 ## Commands
 
@@ -14,6 +14,8 @@ React 19 + Vite + React Router, plain CSS, prerendered to static HTML at build t
 npm run build     # client + SSR build + prerender (dist/*.html, sitemap.xml, llms.txt)
 npm run check     # verifies dist: links, titles, canonicals, one <h1>, no removed services
 npm run lint      # oxlint
+node scripts/check-contact.mjs   # contact API self-check (fake SMTP, sends nothing)
+node scripts/verify-smtp.mjs     # checks the real SMTP settings from env vars; --send sends one test email
 ```
 
 ## Rules

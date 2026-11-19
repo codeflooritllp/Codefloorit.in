@@ -79,4 +79,12 @@ export const HOME_FAQ = [
     q: "Where is Codefloor IT based?",
     a: "In Ahmedabad, Gujarat, India. You can reach us by email, phone or WhatsApp — all the details are on the Contact page.",
   },
+  {
+    q: "Do you work with businesses outside Ahmedabad?",
+    a: "Yes. Codefloor IT is based in Ahmedabad and works with businesses across Gujarat and the rest of India. We offer in-person meetings for clients in Ahmedabad, while planning, discussions, reviews and project updates can also be handled through video calls, email and WhatsApp. We make collaboration convenient regardless of your location.",
+  },
+  {
+    q: "How much does a website or software project cost?",
+    a: "It depends on scope: how many pages and how much content, custom features such as booking or online payments, whether your team needs to edit the site, and how much design work is involved. We do not publish fixed prices. Tell us what you need and we will give you an honest estimate. Our article on business website costs in India explains the main cost drivers.",
+  },
 ];

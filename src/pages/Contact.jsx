@@ -6,9 +6,9 @@ const trail = crumbs({ name: "Contact", path: "/contact" });
 
 export default function Contact() {
   useSeo({
-    title: "Contact Codefloor IT — Let's Build Your Idea",
+    title: "Contact Codefloor IT — Web Developers in Ahmedabad",
     description:
-      "Tell Codefloor IT about your project, business challenge or technology requirements. Based in Ahmedabad, Gujarat. Email info@codefloorit.in or call +91 76984 75791.",
+      "Tell Codefloor IT about your website or software project. Based in Ahmedabad, Gujarat. Email info@codefloorit.in or call +91 76984 75791.",
     path: "/contact",
     pageType: "ContactPage",
     jsonLd: breadcrumbLd(trail),

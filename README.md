@@ -61,11 +61,14 @@ Adding a service, project or article automatically adds its page, sitemap entry 
 
 ## Contact form
 
-There is no backend. Until `VITE_CONTACT_ENDPOINT` is set (see `.env.example`), the form
-validates and then opens WhatsApp (number in `src/data/site.js`) with the message filled
-in — it never reports a send that did not happen. With the variable set, it POSTs JSON
-(`name, email, phone, company, service, details`) and shows success only on a 2xx response.
-The hidden honeypot field is a first filter; add server-side spam protection at the endpoint.
+The form POSTs JSON (`name, email, phone, company, service, details`) to `/api/contact`
+(`api/contact.js`, a Vercel serverless function), which checks it again with the same rules
+(`src/lib/contact.js`), applies spam protection and rate limiting, and emails it over SMTP to
+`CONTACT_TO_EMAIL`. The SMTP variables live only in Vercel (see `.env.example`). The form shows
+success only when the function confirms the email was sent; on failure it offers WhatsApp and email.
+Setting `VITE_CONTACT_ENDPOINT` to an empty value switches the form back to opening WhatsApp
+with the message filled in. Security notes and the SMTP setup for Vercel are in
+`docs/contact-form-backend.md`.
 
 ## Deployment
 
