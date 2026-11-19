@@ -62,10 +62,20 @@ await check("invalid email: 422 with an email error, nothing sent", async () => 
   assert.ok(r.body.errors.email);
   assert.equal(mails(), before);
 });
+await check("missing phone: 422 on phone, nothing sent", async () => {
+  const before = mails();
+  const r = await call({ body: { ...valid, phone: "  " } });
+  assert.equal(r.statusCode, 422);
+  assert.ok(r.body.errors.phone);
+  assert.equal(mails(), before);
+});
+await check("invalid phone: 422 on phone", async () => {
+  assert.ok((await call({ body: { ...valid, phone: "call me" } })).body.errors.phone);
+});
 await check("missing required fields: 422 naming each one", async () => {
   const r = await call({ body: {} });
   assert.equal(r.statusCode, 422);
-  assert.deepEqual(Object.keys(r.body.errors).sort(), ["details", "email", "name", "service"]);
+  assert.deepEqual(Object.keys(r.body.errors).sort(), ["details", "email", "name", "phone", "service"]);
 });
 await check("empty or whitespace-only message: 422 on details", async () => {
   const r = await call({ body: { ...valid, details: "   \n\t  " } });

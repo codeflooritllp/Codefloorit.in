@@ -8,7 +8,7 @@ export function validate(f) {
   const e = {};
   if (f.name.trim().length < 2) e.name = "Enter your full name.";
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.trim())) e.email = "Enter a valid email address, like name@company.com.";
-  if (f.phone.trim() && !/^\+?[\d\s()-]{7,20}$/.test(f.phone.trim())) e.phone = "Enter a valid phone number, or leave this empty.";
+  if (!/^\+?[\d\s()-]{7,20}$/.test(f.phone.trim())) e.phone = "Enter a valid phone number, like +91 98765 43210.";
   if (!f.service) e.service = "Choose the service you need.";
   if (f.details.trim().length < 20) e.details = "Tell us a little more — at least 20 characters.";
   for (const k of FIELDS) if (!e[k] && f[k].length > LIMITS[k]) e[k] = `Keep this under ${LIMITS[k]} characters.`;

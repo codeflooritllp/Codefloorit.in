@@ -139,7 +139,7 @@ export default function ContactForm() {
         {field("email", "Email", { type: "email", autoComplete: "email", inputMode: "email" })}
       </div>
       <div className="cform__row">
-        {field("phone", "Phone Number", { type: "tel", autoComplete: "tel" }, true)}
+        {field("phone", "Phone Number", { type: "tel", autoComplete: "tel", inputMode: "tel" })}
         {field("company", "Company Name", { autoComplete: "organization" }, true)}
       </div>
 
