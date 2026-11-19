@@ -59,15 +59,15 @@ function Hero() {
         <div className="pglow" aria-hidden="true" />
         <div className="container hero__grid">
           <div className="hero__copy">
-            <p className="eyebrow hero__in" style={{ "--i": 0 }}>Web &amp; software development · Ahmedabad</p>
+            <h1 className="eyebrow hero__in" style={{ "--i": 0 }}>Web &amp; Software Development Company in Ahmedabad</h1>
             <DisplayLine />
-            <h1 className="hero__title hero__in" style={{ "--i": 1 }}>
+            <p className="hero__title hero__in" style={{ "--i": 1 }}>
               {/* words rise out of a mask one by one (CSS, .hero__title .sw); the gradient sits on each word */}
               <Split text="Websites & Software That" /> <Split text="Grow Your Business." start={4} wordClass="grad" />
-            </h1>
+            </p>
             <p className="hero__sub hero__in" style={{ "--i": 2 }}>
               From a business website that brings in enquiries to custom software that runs your
-              operations, we plan, design, build and support it with you, for businesses across India.
+              operations, we plan, design, build and support it for businesses in Ahmedabad and across India.
             </p>
             <div className="actions hero__in" style={{ "--i": 3 }}>
               <Btn to="/contact" magnetic arrow>Discuss Your Project</Btn>
@@ -150,7 +150,7 @@ export default function Home() {
             <SectionHeading
               eyebrow="About us"
               title="Built on Engineering. Driven by Possibility."
-              sub="Codefloor IT is a technology-focused development company. We take time to understand what a business needs, then build practical, maintainable software around it."
+              sub="Codefloor IT is a web and software development company in Ahmedabad. We take time to understand what a business needs, then build practical, maintainable software around it."
             />
             <Reveal delay={100}>
               <Btn to="/about" variant="outline" arrow>More about us</Btn>
