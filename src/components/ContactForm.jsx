@@ -1,28 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { CircleAlert, CircleCheck, LoaderCircle, Send } from "lucide-react";
 import { CONTACT, whatsappLink } from "../data/site";
 import { services } from "../data/services";
 import { BRIEF_KEY } from "../data/sukaram";
+import { track } from "../lib/track";
+import { validate } from "../lib/contact";
 import ProjectBlueprint, { PARTS } from "./ProjectBlueprint";
 
-/* Set VITE_CONTACT_ENDPOINT (see .env.example) to a URL that accepts a JSON POST.
-   Without it nothing can be delivered from this page, so the form opens WhatsApp
-   with the message filled in instead — and says so. */
-const ENDPOINT = import.meta.env.VITE_CONTACT_ENDPOINT;
+/* Enquiries go to the site's own API (api/contact.js), which emails them. Setting
+   VITE_CONTACT_ENDPOINT to another URL sends them there; setting it to an empty value
+   switches the form back to opening WhatsApp with the message filled in (see .env.example). */
+const ENDPOINT = import.meta.env.VITE_CONTACT_ENDPOINT ?? "/api/contact";
 
 const SERVICE_OPTIONS = [...services.map((s) => s.title), "Not sure yet"];
 const EMPTY = { name: "", email: "", phone: "", company: "", service: "", details: "", website: "", parts: [] };
-
-export function validate(f) {
-  const e = {};
-  if (f.name.trim().length < 2) e.name = "Enter your full name.";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.trim())) e.email = "Enter a valid email address, like name@company.com.";
-  if (f.phone.trim() && !/^\+?[\d\s()-]{7,20}$/.test(f.phone.trim())) e.phone = "Enter a valid phone number, or leave this empty.";
-  if (!f.service) e.service = "Choose the service you need.";
-  if (f.details.trim().length < 20) e.details = "Tell us a little more — at least 20 characters.";
-  return e;
-}
 
 /** Folds the blueprint parts into the details text, so what is sent keeps the same fields. */
 const withParts = ({ parts, ...f }) =>
@@ -45,6 +37,8 @@ export default function ContactForm() {
   const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle"); // idle | sending | sent | failed | handoff
+  // set synchronously, so even clicks faster than a re-render cannot start a second request
+  const busy = useRef(false);
   // Prerendered HTML ships the button disabled: a tap before hydration would otherwise do a native submit.
   const [ready, setReady] = useState(false);
 
@@ -71,17 +65,24 @@ export default function ContactForm() {
 
   async function onSubmit(e) {
     e.preventDefault();
-    const found = validate(form);
+    if (busy.current) return; // no second request while one is in flight
+    // the blueprint parts are appended to the details on send, so the length limit is checked on that text too
+    const found = { ...validate(withParts(form)), ...validate(form) };
     setErrors(found);
     const first = Object.keys(found)[0];
     if (first) return document.getElementById(`cf-${first}`)?.focus();
     if (form.website) return; // honeypot: real visitors never see or fill this field
 
+    // Analytics get the chosen service only, never what the visitor typed.
+    const lead = { form_name: "project_enquiry", service_name: form.service };
     if (!ENDPOINT) {
       window.open(whatsappLink(`Project enquiry — Codefloor IT\n\n${summary(withParts(form))}`), "_blank", "noopener");
+      // Not a lead: we cannot know whether they press send in WhatsApp.
+      track("form_submit", { ...lead, submit_method: "whatsapp" });
       return setStatus("handoff");
     }
 
+    busy.current = true;
     setStatus("sending");
     try {
       const { website: _honeypot, ...payload } = withParts(form);
@@ -89,12 +90,25 @@ export default function ContactForm() {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(20000), // a hung server ends in the error state, not an endless spinner
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const body = await res.json().catch(() => ({}));
+      if (res.status === 422 && body.errors) {
+        // the server found something the browser check missed: show it on the field, like any other error
+        setErrors(body.errors);
+        setStatus("idle");
+        return document.getElementById(`cf-${Object.keys(body.errors)[0]}`)?.focus();
+      }
+      if (!res.ok || !body.ok) throw new Error(`HTTP ${res.status}`);
+      track("form_submit", { ...lead, submit_method: "endpoint" });
+      // only once the server has emailed it; a repeat of an enquiry already sent is not a new lead
+      if (!body.duplicate) track("generate_lead", lead);
       setForm(EMPTY);
       setStatus("sent");
     } catch {
       setStatus("failed");
+    } finally {
+      busy.current = false;
     }
   }
 
@@ -209,7 +223,8 @@ export default function ContactForm() {
           <m.p key="failed" {...SLIDE} className="cform__msg cform__msg--err">
             <CircleAlert size={20} aria-hidden="true" />
             <span>
-              Sorry, your message could not be sent. Please try again, or email{" "}
+              Sorry, your message could not be sent. Please try again,{" "}
+              <a href={whatsappLink(summary(withParts(form)))} target="_blank" rel="noopener noreferrer">send it on WhatsApp</a>, or email{" "}
               <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> directly.
             </span>
           </m.p>
