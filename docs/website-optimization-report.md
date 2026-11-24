@@ -65,18 +65,37 @@ Organization + ProfessionalService (site-wide, `index.html`: now 8 services, `fo
 
 Note: Google now shows FAQ rich results only for authoritative government/health sites. The FAQPage markup is valid and harmless, but do not expect FAQ snippets.
 
-## 9. Performance comparison (Lighthouse 12, mobile emulation, local `vite preview`, this laptop)
+## 9. Performance comparison
 
-| | Before (HEAD) | After |
-|---|---|---|
-| Home performance | 34–45 | 37–70 (noisy) |
-| Home LCP | 4.2–6.1 s | 4.3–6.0 s |
-| Home TBT | ~1.6 s | 0.3–2.4 s |
-| Home transfer | 387 KB | 395 KB |
-| Accessibility / Best practices / SEO | — | 100 / 100 / 100 (home, /services/ui-ux-design, /contact) |
-| Contact performance | — | 72 |
+Lighthouse 12, local `vite preview` on the same laptop, median of 3 runs per page and form factor, simulated throttling (Lighthouse defaults). This machine is shared and noisy (benchmark index 550–2100), so expect ±5–10 points between single runs. "Before" is the branch before the performance pass (commit c47d2ce).
 
-Local runs on a busy laptop vary ±20 points. Re-measure on PageSpeed Insights after deploy. The performance targets (90+, LCP ≤ 2.5 s) are **not met**, and they were not met before this pass either.
+| Page | Mobile before → after | Desktop (GPU) before → after | Desktop, no GPU* |
+|---|---|---|---|
+| Home | 50 → **78** | 84 → **96** | 98 |
+| Services | 57 → **84** | 56 → **70** | 100 |
+| Contact | 56 → **90** | 68 → **72** | 100 |
+
+\* `--disable-gpu`, which is how PageSpeed Insights' servers are likely to run. Without GPU acceleration the 3D scenes are now skipped.
+
+Mobile detail (after): home FCP 2.5 s / LCP 3.8 s / TBT 249 ms; services 2.4 / 3.9 / 98; contact 2.2 / 3.3 / 74. CLS ≤ 0.003 everywhere. Accessibility 96–100, Best Practices 100, SEO 100 on every page and form factor.
+
+What changed, and why:
+
+- **3D scenes:** skipped where there is no GPU acceleration, using an asynchronous WebGPU adapter check plus a software-renderer check inside the 3D chunk. Setup now yields between steps, and shaders compile with `compileAsync`. Before, desktop /services spent 6.7 s in three.js.
+- **Hydration:** runs inside `startTransition`, so React yields instead of running one 0.7–1 s task.
+- **Brand intro:** its markup is prerendered into the homepage. `intro.js` is now async and no longer a parser-blocking script on all 41 pages.
+- **CSS:** the stylesheet is inlined (one fewer render-blocking request). A `disabled` link stops Vite from fetching it again.
+- **App JavaScript:** starts downloading just after first paint, via a generated `boot-<hash>.js`, so it stops competing with HTML and fonts.
+- **GTM:** loads after `load` + idle. It only runs on the live domain, so this gain shows on PageSpeed, not in the local numbers above.
+- **Touch screens:** the hero's letter/word entrances keep their motion but drop the blur filter, which could not run on the compositor.
+- **Tried and reverted:** `content-visibility: auto` on sections. The site's reveal and scroll-progress code measures elements on load, which forced the skipped sections to lay out one by one and made things worse.
+
+**Targets not met without design changes:**
+
+- **Home mobile (78 vs 85):** the 2.6 s brand intro deliberately holds the hero back, so LCP cannot drop below ~3.5 s while the intro plays on phones. Reaching 85 needs a shorter or desktop-only intro.
+- **Services mobile (84):** within noise of 85.
+- **Desktop with a real GPU (services/contact ~70):** the glossy 3D scenes bake a reflection environment (PMREM). In three.js 0.186 that compiles a 256-sample GGX shader synchronously, about 0.8 s on an integrated Intel GPU, at any texture size. On machines without a GPU (PageSpeed) the scene is skipped and these pages score 100. Fixing it for GPU users means pre-baking the environment as an asset or using a simpler lighting setup for those two scenes.
+- Lighthouse mobile LCP is simulated. Observed paint on this machine happens at 0.7–1.6 s; the simulation adds the time to download JS and fonts on a slow 4G profile.
 
 ## 10. Conversion tracking
 

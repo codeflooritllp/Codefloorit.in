@@ -27,9 +27,10 @@ from `lib/motion.js`, not `window.scrollTo`, or the two will fight; tune the fee
 `wheelMultiplier` in `initSmoothScroll()`.
 
 The brand intro plays on every full load of the homepage (not on in-app navigation), never with
-reduced motion. `public/intro.js`, loaded at the top of `<body>` (not inline: the CSP blocks inline scripts),
-injects it so it paints before the bundle loads; its 2.5s timeline is CSS ("Intro" in
-`src/styles/index.css`). Any key, click, wheel or touch skips it.
+reduced motion. `scripts/prerender.mjs` writes its markup into the prerendered homepage, so it paints
+with the first frame without a render-blocking script; its 2.5s timeline is CSS ("Intro" in
+`src/styles/index.css`). `public/intro.js` (async) only lets any key, click, wheel or touch skip it and
+removes it afterwards. In `npm run dev` there is no intro (the dev server does not prerender).
 
 The robot (`components/Robot.jsx`) is an SVG with CSS poses. Sections choose its pose with
 `data-robot="idle|point|explore|think|greet"`. The robot is named Sukaram. Everything he
@@ -48,7 +49,20 @@ after editing his answers.
 
 3D scenes (`components/three/scene.js`, mounted by `Scene3D.jsx`) use three.js with models built
 from primitives - no model files. The three.js chunk (~136 KB gzipped) is downloaded only on
-desktop screens with a mouse, without reduced motion or data saver, when a canvas nears the viewport.
+desktop screens with a mouse, without reduced motion or data saver, when a canvas nears the viewport,
+and only with GPU acceleration: no WebGPU adapter (checked asynchronously) or a software WebGL renderer
+(SwiftShader, Microsoft Basic Render) leaves the canvas empty, as on phones. Scene setup yields to the
+browser between steps so it is several short tasks, not one long one.
+
+## Loading performance
+
+`scripts/prerender.mjs` inlines the stylesheet into every page (no render-blocking CSS request) and
+replaces Vite's entry `<script type="module">` and modulepreloads with a small generated
+`/assets/boot-<hash>.js` that adds them just after the first paint, so the JavaScript does not compete
+with the HTML and fonts on a slow connection. Hydration runs inside `startTransition`, so it yields
+instead of blocking. `public/gtm-loader.js` fetches Google Tag Manager only after the page has loaded
+and the browser is idle; events pushed before that wait in `dataLayer`. On touch screens the hero's
+letter and word entrances drop their blur filter (it cannot run on the compositor).
 
 ## Content lives in `src/data/`
 
