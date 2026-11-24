@@ -2,7 +2,7 @@ import { Check } from "lucide-react";
 import { useSeo, breadcrumbLd, crumbs, SITE_URL } from "../lib/seo";
 import { services } from "../data/services";
 import { ArrowLink, CtaBand, PageHero, Reveal } from "../components/ui";
-import { ProcessSection } from "../components/sections";
+import { PricingSection, ProcessSection } from "../components/sections";
 import { BigWord } from "../components/editorial";
 import ServiceGlyph from "../components/ServiceGlyph";
 
@@ -12,7 +12,7 @@ export default function Services() {
   useSeo({
     title: "Software & Web Development Services",
     description:
-      "Custom software, web applications, business websites, e-commerce, website modernization and ongoing technical support from Codefloor IT.",
+      "Websites from ₹15,999, web applications, custom software, e-commerce, UI/UX design, IT consulting, modernization and support from Codefloor IT, Ahmedabad.",
     path: "/services",
     pageType: "CollectionPage",
     jsonLd: [
@@ -70,6 +70,7 @@ export default function Services() {
         </div>
       </section>
 
+      <PricingSection />
       <ProcessSection />
       <CtaBand />
     </>

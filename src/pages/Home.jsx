@@ -1,12 +1,12 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, MessageCircle } from "lucide-react";
 import { useSeo, faqLd } from "../lib/seo";
 import { usePointerVars, useScrollProgress } from "../lib/motion";
 import { solutions } from "../data/solutions";
 import { techGroups } from "../data/tech";
-import { HOME_FAQ, PRINCIPLES } from "../data/site";
-import { ArrowLink, Btn, FaqList, Marquee, Reveal, SectionHeading, Split } from "../components/ui";
+import { HOME_FAQ, PRINCIPLES, whatsappLink } from "../data/site";
+import { ArrowLink, Btn, CtaBand, FaqList, Marquee, Reveal, SectionHeading, Split } from "../components/ui";
 import { SolutionCard } from "../components/cards";
-import { ContactSection, ProcessSection, TechShowcase, WhySection } from "../components/sections";
+import { ContactSection, PricingSection, ProcessSection, TechShowcase, Testimonials, WhySection } from "../components/sections";
 import { KineticStatement, ServiceReel, StoryScene, WorkScene } from "../components/scenes";
 import HeroVisual from "../components/HeroVisual";
 import Scene3D from "../components/Scene3D";
@@ -70,9 +70,18 @@ function Hero() {
               operations, we plan, design, build and support it for businesses in Ahmedabad and across India.
             </p>
             <div className="actions hero__in" style={{ "--i": 3 }}>
-              <Btn to="/contact" magnetic arrow>Discuss Your Project</Btn>
-              <Btn to="/work" variant="outline">See Our Work</Btn>
+              <Btn to="/contact" magnetic arrow>Get a Free Quote</Btn>
+              <Btn to="/work" variant="outline">Explore Our Work</Btn>
             </div>
+            <a
+              className="hero__wa hero__in"
+              style={{ "--i": 4 }}
+              href={whatsappLink("Hello Codefloor IT, I would like a quote for a project.")}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <MessageCircle size={18} aria-hidden="true" /> Prefer WhatsApp? Message us<span className="sr-only"> (opens in a new tab)</span>
+            </a>
           </div>
           <div className="hero__visual">
             <div className="hero__in" style={{ "--i": 2 }}>
@@ -142,6 +151,12 @@ export default function Home() {
       </section>
 
       <WorkScene />
+      <Testimonials />
+      <CtaBand
+        title="Have a project in mind?"
+        sub="Let's build something that moves your business forward."
+        cta="Get a Free Consultation"
+      />
       <TechShowcase />
 
       <section className="section about-teaser" data-robot="idle">
@@ -172,6 +187,7 @@ export default function Home() {
 
       <ProcessSection />
       <WhySection />
+      <PricingSection />
 
       <section className="section" data-robot="idle">
         <div className="container container--narrow">

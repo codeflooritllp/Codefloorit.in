@@ -2,6 +2,14 @@
    Codefloor IT — design tokens, base, primitives, components
    ========================================================================== */
 
+/* The rupee sign (U+20B9) is in the fonts' latin-ext subset; without these faces one "₹" on a
+   page downloads ~100 KB of extra font files. Declared after the fontsource faces, so for this
+   one character the browser uses the system font instead. */
+@font-face { font-family: "Inter Variable"; src: local("Segoe UI"), local("Roboto"), local("Helvetica Neue"), local("Arial"); font-weight: 100 550; unicode-range: U+20B9; }
+@font-face { font-family: "Inter Variable"; src: local("Segoe UI Bold"), local("Roboto Bold"), local("Helvetica Neue Bold"), local("Arial Bold"); font-weight: 551 900; unicode-range: U+20B9; }
+@font-face { font-family: "Space Grotesk Variable"; src: local("Segoe UI"), local("Roboto"), local("Helvetica Neue"), local("Arial"); font-weight: 100 550; unicode-range: U+20B9; }
+@font-face { font-family: "Space Grotesk Variable"; src: local("Segoe UI Bold"), local("Roboto Bold"), local("Helvetica Neue Bold"), local("Arial Bold"); font-weight: 551 900; unicode-range: U+20B9; }
+
 :root {
   --cyan: #00d4ff;
   --blue: #1677ff;
@@ -3468,3 +3476,44 @@ html.intro-skip { --intro: 0s; }
   .asst--away > * { pointer-events: none; }
 }
 @media (max-width: 640px) and (prefers-reduced-motion: reduce) { .asst { transition: none; } }
+
+/* ---------- Pricing, testimonials, hero WhatsApp link ---------- */
+.hero__wa { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; font-weight: 600; color: var(--muted); text-decoration: underline; text-underline-offset: 4px; }
+.hero__wa:hover { color: var(--text); }
+.hero__wa svg { color: #25d366; }
+
+.prices { align-items: stretch; margin-top: 8px; }
+.price { display: flex; flex-direction: column; gap: 14px; padding: 32px 28px; }
+.price h3 { font-size: 1.2rem; }
+.price__amt { font: 700 clamp(1.8rem, 3vw, 2.3rem) / 1.1 var(--font-d); color: var(--text); }
+.price__for { color: var(--muted); }
+.price .checks { margin-bottom: 8px; }
+.price__facts { font-weight: 600; }
+.price__gst { margin-top: -10px; font-size: 0.9rem; font-weight: 600; color: var(--accent); }
+.price .btn { align-self: flex-start; margin-top: auto; }
+.price--featured { border-color: var(--blue); box-shadow: 0 18px 40px -18px rgb(22 119 255 / 0.45); }
+.prices__note { max-width: 720px; margin: 32px auto 0; text-align: center; line-height: 1.8; color: var(--muted); }
+.prices__note a { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+.quote { display: flex; flex-direction: column; gap: 18px; margin: 0; padding: 28px; }
+.quote__mark { color: var(--accent); }
+.quote blockquote { flex: 1; margin: 0; }
+.quote figcaption { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 0.95rem; }
+.quote figcaption img { border-radius: 50%; }
+.quote strong { color: var(--text); }
+
+.status--origin { background: #e8eefc; color: #1d3f8f; }
+.status--origin::before { display: none; }
+.team__photo { margin-bottom: 16px; border-radius: 50%; }
+.team__role { margin-top: 4px; font-weight: 600; color: var(--accent); }
+.facts { display: grid; gap: 0; margin: 0; }
+.facts > div { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.facts dt { font-weight: 600; }
+.facts dd { margin: 0; color: var(--muted); }
+.facts a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 640px) { .facts > div { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+.team { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); padding: clamp(24px, 4vw, 44px); }
+.team > div > p + p { margin-top: 12px; }
+.team__h { margin-bottom: 14px; font-size: 1rem; }
+.team__quote { margin: 20px 0 0; padding-left: 16px; border-left: 3px solid var(--accent); font-style: italic; }
+@media (max-width: 899px) { .team { grid-template-columns: minmax(0, 1fr); } }
