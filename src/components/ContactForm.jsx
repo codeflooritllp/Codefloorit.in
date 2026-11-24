@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { CircleAlert, CircleCheck, LoaderCircle, Send } from "lucide-react";
+import { Link } from "react-router";
 import { CONTACT, whatsappLink } from "../data/site";
 import { services } from "../data/services";
 import { BRIEF_KEY } from "../data/sukaram";
@@ -14,7 +15,8 @@ import ProjectBlueprint, { PARTS } from "./ProjectBlueprint";
 const ENDPOINT = import.meta.env.VITE_CONTACT_ENDPOINT ?? "/api/contact";
 
 const SERVICE_OPTIONS = [...services.map((s) => s.title), "Not sure yet"];
-const EMPTY = { name: "", email: "", phone: "", company: "", service: "", details: "", website: "", parts: [] };
+const BUDGETS = ["Under ₹25,000", "₹25,000 – ₹1,00,000", "₹1,00,000 – ₹5,00,000", "Above ₹5,00,000", "Not sure yet"];
+const EMPTY = { name: "", email: "", phone: "", company: "", service: "", budget: "", details: "", website: "", parts: [] };
 
 /** Folds the blueprint parts into the details text, so what is sent keeps the same fields. */
 const withParts = ({ parts, ...f }) =>
@@ -29,6 +31,7 @@ const summary = (f) =>
     `Phone: ${f.phone || "-"}`,
     `Company: ${f.company || "-"}`,
     `Service required: ${f.service}`,
+    `Budget: ${f.budget || "-"}`,
     "",
     f.details,
   ].join("\n");
@@ -163,6 +166,18 @@ export default function ContactForm() {
         <FieldError id="cf-service-err" msg={errors.service} />
       </div>
 
+      <div className="field">
+        <label htmlFor="cf-budget">
+          Project Budget <span className="field__opt">(optional)</span>
+        </label>
+        <select id="cf-budget" name="budget" value={form.budget} onChange={set("budget")}>
+          <option value="">Prefer not to say</option>
+          {BUDGETS.map((o) => (
+            <option key={o}>{o}</option>
+          ))}
+        </select>
+      </div>
+
       <ProjectBlueprint value={form.parts} onChange={(parts) => setForm((f) => ({ ...f, parts }))} />
 
       <div className="field">
@@ -195,6 +210,10 @@ export default function ContactForm() {
           <>{ENDPOINT ? "Send Message" : "Send on WhatsApp"} <Send size={18} aria-hidden="true" /></>
         )}
       </button>
+
+      <p className="cform__note">
+        We use your details only to reply to your enquiry. See our <Link to="/privacy-policy">privacy policy</Link>.
+      </p>
 
       {!ENDPOINT && (
         <p className="cform__note">

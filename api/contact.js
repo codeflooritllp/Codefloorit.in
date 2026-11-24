@@ -112,6 +112,7 @@ export default async function handler(req, res) {
         `Phone: ${lead.phone || "-"}`,
         `Company: ${lead.company || "-"}`,
         `Service required: ${lead.service}`,
+        `Budget: ${lead.budget || "-"}`,
         "",
         lead.details,
         "",
