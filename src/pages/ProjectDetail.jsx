@@ -51,6 +51,7 @@ function Detail({ p }) {
           <dl className="pfacts">
             <div><dt>Industry</dt><dd>{p.industry}</dd></div>
             <div><dt>Status</dt><dd><StatusBadge status={p.status} /></dd></div>
+            {p.origin && <div><dt>Type</dt><dd>{p.origin}</dd></div>}
             <div><dt>Technology</dt><dd>{p.tech.join(" · ")}</dd></div>
             <div>
               <dt>{p.shot ? "Visual" : "Note"}</dt>

@@ -1,8 +1,10 @@
 /**
  * Real projects only. Keep the `status` field honest:
- *   "Completed"       — delivered and in use
+ *   "Completed"       — built and finished (for portfolio work this says nothing about who paid for it)
  *   "In Development"  — actively being built, not a live production system
  *   "Upcoming"        — planned, not started
+ * `origin` (optional) labels where the work came from: "In-house product" or "Demo project" (a portfolio
+ *   demonstration, not a paid client project; never claim client results for it). Name a client only when confirmed.
  * `live` is the delivered site's URL. `shot` is a real screenshot (1400px wide, in public/work/); without one the card shows an illustrative mockup.
  */
 
@@ -14,6 +16,7 @@ export const projects = [
     industry: "Legal",
     filters: ["web"],
     status: "Completed",
+    origin: "Demo project",
     scene: "legal",
     shot: "/work/oracle-legal-consultancy-website-homepage.webp",
     live: "https://oracle-legal-consultancy-zdq4.vercel.app/",
@@ -24,13 +27,13 @@ export const projects = [
       "A professional digital platform created for a legal consultancy business, combining a modern online presence with structured content and business-focused functionality.",
     tech: ["React", "Vite", "Node.js", "Responsive UI", "SEO structure"],
     overview:
-      "Oracle Legal Consultancy is a modern website and content platform built for a legal consultancy business. It gives the practice a professional, trustworthy online presence and organises its services, vision, and background into a structure that prospective clients can follow easily.",
+      "Oracle Legal Consultancy is a demonstration website and content platform designed for a legal consultancy. It gives the practice a professional, trustworthy online presence and organises its services, vision, and background into a structure that prospective clients can follow easily.",
     challenge:
-      "Legal consultancy is a credibility business. Potential clients research quietly before they ever make contact, and an outdated or confusing website costs enquiries before a conversation can happen. The consultancy needed a digital presence that signalled professionalism, explained its services in plain language, and made getting in touch straightforward — without depending on a developer every time the content changed.",
+      "Legal consultancy is a credibility business. Potential clients research quietly before they ever make contact, and an outdated or confusing website costs enquiries before a conversation can happen. A consultancy needs a digital presence that signalled professionalism, explained its services in plain language, and made getting in touch straightforward — without depending on a developer every time the content changed.",
     approach: [
       "We started with the questions a prospective client is actually asking: what does this firm do, is it credible, and how do I reach it. Everything on the site is organised to answer those quickly.",
       "We designed a restrained, professional interface — typography and spacing that read as considered rather than flashy — and structured the content into clear sections for services, vision, and background.",
-      "Because the practice needed to keep information current, we built an admin-managed content layer so key sections can be updated in-house without touching code.",
+      "So that information can be kept current, we built an admin-managed content layer so key sections can be updated in-house without touching code.",
     ],
     solution:
       "Codefloor IT designed and developed a responsive website with a professional visual identity, a clear service presentation, a vision section, admin-controlled dynamic content, and a contact and enquiry flow. The structure is SEO-friendly, with semantic markup and correct heading hierarchy, so the practice can be found for the services it offers.",
@@ -60,7 +63,7 @@ export const projects = [
     ux:
       "The experience is built to reduce friction for someone deciding whether to reach out. Information is scannable, the tone is professional, and the path from landing on the site to sending an enquiry is short and obvious on any device.",
     outcome:
-      "The result is a clearer, more credible digital front door for the consultancy. Prospective clients get a straightforward route from discovering the practice to understanding its services and making contact, and the team can keep the content current without external help.",
+      "The finished site gives a legal consultancy a clear, credible digital front door: a straightforward route from discovering the practice to understanding its services and making contact, with an admin area for keeping content current without a developer.",
     seoTitle: "Oracle Legal Consultancy — Legal Consultancy Website Development | Codefloor IT",
     seoDescription:
       "How Codefloor IT built a legal consultancy website with structured content, admin-managed sections, an enquiry flow and an SEO-friendly structure.",
@@ -80,6 +83,7 @@ export const projects = [
     industry: "Hospitality",
     filters: ["web", "software"],
     status: "Completed",
+    origin: "Demo project",
     scene: "hotel",
     shot: "/work/aranya-palace-resort-website-homepage.webp",
     live: "https://aranya-place.vercel.app/",
@@ -90,7 +94,7 @@ export const projects = [
       "A modern hotel and hospitality platform designed to provide guests with an engaging digital experience while supporting hotel booking and management operations.",
     tech: ["React", "Vite", "Node.js", "Responsive UI"],
     overview:
-      "Aranya Palace is a hospitality platform built around two audiences: guests deciding where to stay, and the team running the property. For guests, it presents the hotel, its rooms, and its offers in a way that builds confidence before booking. For the property, it supports the booking and management side of day-to-day operations.",
+      "Aranya Palace is a demonstration hospitality platform built around two audiences: guests deciding where to stay, and the team running the property. For guests, it presents the hotel, its rooms, and its offers in a way that builds confidence before booking. For the property, it supports the booking and management side of day-to-day operations.",
     challenge:
       "Guests rarely book a hotel they cannot picture. They want to see the rooms, understand what is included, check offers, and reach a booking decision quickly — usually on a phone. At the same time, the property needs those enquiries and bookings to arrive in a form the team can actually manage, rather than scattered across calls and messages.",
     approach: [
@@ -127,7 +131,7 @@ export const projects = [
     ux:
       "The guest side is visual, fast, and mobile-first, with room information laid out the way people compare options. The management side turns what would otherwise be loose enquiries into a structured list the team can work through.",
     outcome:
-      "Aranya Palace gives the property a polished digital front door and a more organised way to receive and handle bookings — the information a guest needs to choose it, and the structure the team needs to run it.",
+      "The finished platform pairs a polished guest-facing hotel website with an organised way to receive and handle bookings — the information a guest needs to choose the property, and the structure a hotel team needs to run it.",
     seoTitle: "Aranya Palace — Hotel Website & Booking System Development | Codefloor IT",
     seoDescription:
       "Aranya Palace hotel website and booking platform by Codefloor IT: room discovery, booking flow, offers, gallery and booking management for staff.",
@@ -149,6 +153,7 @@ export const projects = [
     industry: "Business Operations",
     filters: ["software"],
     status: "Completed",
+    origin: "In-house product",
     scene: "crm",
     shot: "/work/leadhunter-crm-dashboard.webp",
     order: 3,

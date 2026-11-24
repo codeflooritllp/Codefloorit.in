@@ -102,7 +102,7 @@ export default function Solutions() {
                         {project && (
                           <li>
                             <ArrowLink to={`/work/${project.slug}`}>
-                              Related project: {project.title} ({project.status})
+                              Related project: {project.title} ({project.origin ? `${project.origin}, ` : ""}{project.status})
                             </ArrowLink>
                           </li>
                         )}

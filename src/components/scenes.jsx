@@ -275,6 +275,7 @@ export function WorkScene() {
                 <div className="wpanel__body">
                   <div className="pcard__meta">
                     <span>{p.category}</span>
+                    {p.origin && <span className="status status--origin">{p.origin}</span>}
                     <StatusBadge status={p.status} />
                   </div>
                   <h3>{p.title}</h3>
