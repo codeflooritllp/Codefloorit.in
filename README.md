@@ -52,7 +52,8 @@ desktop screens with a mouse, without reduced motion or data saver, when a canva
 
 ## Content lives in `src/data/`
 
-- `services.js` — the six services offered. **Do not add services without approval.**
+- `services.js` — the eight services offered (UI/UX Design and IT Consulting approved 2026-11-24). **Do not add services without approval.**
+- `site.js` also holds `PACKAGES` (published website prices) and `TEAM` (About page); `testimonials.js` holds client quotes (section hidden while empty, publish only with written permission).
 - `solutions.js` — use-case categories (what can be built; not client claims).
 - `projects.js` — real projects only. Keep `status` honest (`Completed` / `In Development`).
 - `insights.js` — articles. `tech.js` — technology list. `site.js` — contact, nav, process, FAQ.
