@@ -1,10 +1,10 @@
-import { Blocks, LayoutDashboard, Globe, ShoppingCart, RefreshCw, LifeBuoy } from "lucide-react";
+import { Blocks, LayoutDashboard, Globe, ShoppingCart, RefreshCw, LifeBuoy, PenTool, Compass } from "lucide-react";
 
 /* The only services Codefloor IT offers. Do not add to this list without approval. */
 export const services = [
   {
     slug: "custom-software-development",
-    seoTitle: "Custom Software Development in Ahmedabad",
+    seoTitle: "Custom Software Development Company in Ahmedabad",
     seoDescription:
       "Custom software built around how your business works: CRMs, dashboards, booking and internal tools. Codefloor IT, Ahmedabad. Discuss your project.",
     icon: Blocks,
@@ -47,7 +47,7 @@ export const services = [
   },
   {
     slug: "web-application-development",
-    seoTitle: "Web Application Development in Ahmedabad",
+    seoTitle: "Custom Web Application Development in Ahmedabad",
     seoDescription:
       "Web applications for businesses in Ahmedabad and across India: dashboards, customer portals, booking systems and business platforms by Codefloor IT.",
     icon: LayoutDashboard,
@@ -90,7 +90,7 @@ export const services = [
   },
   {
     slug: "business-website-development",
-    seoTitle: "Business Website Development in Ahmedabad",
+    seoTitle: "Website Development Company in Ahmedabad",
     seoDescription:
       "Business websites that explain what you do, build trust and bring in enquiries. Designed and developed by Codefloor IT in Ahmedabad, Gujarat.",
     icon: Globe,
@@ -120,11 +120,11 @@ export const services = [
     ],
     stack: ["React", "Vite", "Node.js"],
     local:
-      "People choosing a legal adviser or a hotel usually look the business up online before they call, and a clear, credible website often decides whether they do. Our completed work includes a website for a legal consultancy and a hotel website with a booking flow, so we have built for exactly that moment. Businesses in Ahmedabad can plan the site with us in person; companies elsewhere in Gujarat and India work with us over video calls, email and WhatsApp.",
+      "People choosing a legal adviser or a hotel usually look the business up online before they call, and a clear, credible website often decides whether they do. Our portfolio includes demo builds of a legal consultancy website and a hotel website with a booking flow, designed for exactly that moment. Businesses in Ahmedabad can plan the site with us in person; companies elsewhere in Gujarat and India work with us over video calls, email and WhatsApp.",
     reading: ["professional-business-website", "business-website-cost-india", "business-website-timeline", "modern-hotel-website"],
     faqs: [
       { q: "What does business website development include?", a: "Planning the pages and content structure, designing and building responsive pages, contact and enquiry flows, search-friendly titles, headings and metadata, and — where content changes often — a way for your team to edit it. The exact scope is agreed before the build starts." },
-      { q: "What affects the cost of a business website?", a: "Mainly the number of unique page layouts, how much of the content is ready, custom functionality such as bookings or payments, and any integrations. We quote once we understand the scope rather than from a fixed price list." },
+      { q: "What affects the cost of a business website?", a: "Mainly the number of unique page layouts, how much of the content is ready, custom functionality such as bookings or payments, and any integrations. Our Starter Website package (5–10 pages) is ₹15,999 and our Business Website package (10–15 pages) is ₹26,999, both GST included; anything beyond those packages is quoted once we understand the scope." },
       { q: "Can our team update the content ourselves?", a: "Yes. Where content changes often we add a simple admin area or content system so you can update text and images without a developer." },
       { q: "How long does a business website take?", a: "It depends on the number of unique pages, how ready the content is and any custom functionality. We give a realistic timeline once we understand the scope." },
       { q: "Do you build business websites for companies in Ahmedabad?", a: "Yes. We are based in Ahmedabad and build websites for businesses here and across Gujarat and India. Local clients can meet us in person to plan the pages and content." },
@@ -165,7 +165,7 @@ export const services = [
     stack: ["WooCommerce", "WordPress", "Shopify", "React", "Node.js"],
     local:
       "Selling online lets a shop or brand in Ahmedabad reach customers across Gujarat and the rest of India without opening another outlet. We help you choose the right route: a WooCommerce or Shopify store when your catalog and checkout are fairly standard, or a custom-built store when your products, pricing or order process are not. Ahmedabad businesses can plan the store with us in person; others work with us over video calls, email and WhatsApp.",
-    reading: ["business-website-cost-india", "website-vs-web-application"],
+    reading: ["ecommerce-website-benefits-india", "business-website-cost-india", "website-vs-web-application"],
     faqs: [
       { q: "Do you build custom stores or use an existing platform?", a: "Either, depending on the requirement. A platform-based store is faster to launch for standard catalogs; a custom build makes sense when products, pricing or checkout logic are unusual." },
       { q: "Can you set up payment gateways used in India?", a: "Yes. We set up the payment provider that suits your business, along with the order and confirmation flow around it." },
@@ -252,13 +252,99 @@ export const services = [
     stack: ["React", "Node.js", "Express", "MySQL", "PostgreSQL"],
     local:
       "Support is simpler when your developer is close by. Businesses in Ahmedabad can meet us in person to agree what support covers and to review the site together, while clients elsewhere in Gujarat and India raise requests and get updates through email, WhatsApp and video calls. What support includes, and how requests are prioritised, is agreed with each client before it starts.",
-    reading: ["choose-software-company"],
+    reading: ["website-maintenance-security", "choose-software-company"],
     faqs: [
       { q: "What is included in website maintenance?", a: "Typically bug fixes, content and layout updates, software and dependency updates, performance checks and small improvements. The exact scope, and how requests are raised, is agreed with each client before support starts." },
       { q: "Can you maintain a site you did not build?", a: "Usually, yes. We first review the existing code to understand its condition, then tell you honestly what we can take on." },
       { q: "How is support arranged?", a: "That is agreed per client — it depends on how much change you expect and how quickly you need responses. We set it out clearly before starting." },
       { q: "What do you need from us to take over an existing site?", a: "Access to the server or platform the site runs on, the domain account, the code and any admin logins, plus details of the third-party services it relies on, such as email or payments. Before changing anything, we review the code and setup and tell you what we found." },
       { q: "Do you maintain web applications as well as websites?", a: "Yes. We support websites and web applications, including fixes, updates to the software they depend on and small new features. The scope is agreed with each client." },
+    ],
+    projects: [],
+  },
+  {
+    slug: "ui-ux-design",
+    seoTitle: "UI/UX Design Services in Ahmedabad",
+    seoDescription:
+      "UI/UX design for websites and web applications: user journeys, wireframes and interface design that make the next step obvious. Codefloor IT, Ahmedabad.",
+    icon: PenTool,
+    title: "UI/UX Design",
+    short: "Clear user journeys and interfaces for websites, web apps and business software.",
+    intro:
+      "Good design is how quickly someone understands what to do next. We work out who uses the product and what they came to do, then design screens that make that obvious, whether we build the product ourselves or hand the designs to your developers.",
+    build: [
+      "User journeys and page structure",
+      "Wireframes for key screens",
+      "Interface design for websites and web apps",
+      "Dashboard and admin screen design",
+      "Responsive layouts for phone, tablet and desktop",
+      "Usability and accessibility reviews of existing screens",
+    ],
+    approach: [
+      { h: "Start from the task", p: "We list who uses the product and the main job each of them comes to do, so every screen has a clear purpose." },
+      { h: "Structure, then style", p: "Wireframes settle what goes where and in what order before any colours or visual details are decided." },
+      { h: "Designed to be built", p: "Because we also develop software, designs stay realistic to build and are handed over with the states and edge cases developers need." },
+    ],
+    problems: [
+      "Visitors who land on the site and cannot tell what to do next",
+      "Software your team avoids because the screens are confusing or slow to use",
+      "Forms and checkouts that people start but do not finish",
+      "Dashboards crowded with data but short on the numbers people actually need",
+      "Screens that work on a desktop but are awkward on a phone",
+    ],
+    stack: ["React", "Vite", "Responsive UI"],
+    local:
+      "Design decisions are easier to make together. Businesses in Ahmedabad can review wireframes and screens with us in person, walking through each step as their customers or staff would. Clients elsewhere in Gujarat and India get the same reviews over video calls with screen-sharing, so feedback is collected while it is still cheap to change.",
+    reading: ["professional-business-website", "website-vs-web-application"],
+    faqs: [
+      { q: "What is the difference between UI and UX design?", a: "UX (user experience) design is about the journey: what a person needs to do, in what order, and what could stop them. UI (user interface) design is how each screen looks and behaves. We do both, because a good-looking screen in the wrong place in the journey still fails." },
+      { q: "Can you design without building?", a: "Yes. We can design the screens and hand them to your own developers, with the states and edge cases they need. Most clients ask us to build as well, so the design and the build stay in one team." },
+      { q: "Can you improve the design of software we already use?", a: "Yes. We review the existing screens, find where people get stuck, and redesign those parts first rather than starting over." },
+      { q: "Will the design work on mobile?", a: "Yes. We design layouts for phone, tablet and desktop, and check that buttons, forms and text stay usable on small screens." },
+      { q: "Do you offer UI/UX design to businesses outside Ahmedabad?", a: "Yes. Design reviews work well over video calls with screen-sharing, so businesses across Gujarat and India work with us the same way. Clients in Ahmedabad can also meet us in person." },
+    ],
+    projects: ["oracle-legal-consultancy", "aranya-palace", "leadhunter-crm"],
+  },
+  {
+    slug: "it-consulting",
+    seoTitle: "IT Consulting for Businesses in Ahmedabad",
+    seoDescription:
+      "Independent advice before you build: ready-made vs custom software, project scope, technology choices and reviews of existing websites. Codefloor IT, Ahmedabad.",
+    icon: Compass,
+    title: "IT Consulting",
+    short: "Practical advice on what to build, what to buy and how to plan it.",
+    intro:
+      "Before spending on software, most businesses need a straight answer to a few questions: do we need custom software or will an existing product do, what should the first version include, and what will it take to run? We help you answer them, with advice based on building and maintaining real projects.",
+    build: [
+      "Ready-made vs custom software assessments",
+      "Scoping a first version and a phased plan",
+      "Technology recommendations for a new project",
+      "Reviews of an existing website or application",
+      "Second opinions on proposals and quotes",
+      "Requirement documents your team can share",
+    ],
+    approach: [
+      { h: "Understand the business first", p: "We look at how the work happens today and what has to change before talking about any technology." },
+      { h: "Honest options", p: "We set out the realistic routes, including off-the-shelf tools when they are the better fit, with the trade-offs of each." },
+      { h: "Something you can act on", p: "You get a written recommendation and scope you can use with us or with any other team." },
+    ],
+    problems: [
+      "Not knowing whether to buy an existing product or build something custom",
+      "Quotes from different vendors that are impossible to compare",
+      "A project idea that keeps growing and has no clear first version",
+      "An existing website or system that nobody on the team can assess",
+      "Technology decisions made on what is new rather than what fits",
+    ],
+    stack: ["React", "Node.js", "PostgreSQL", "MySQL", "WordPress", "Shopify"],
+    local:
+      "Consulting starts with conversation, so businesses in Ahmedabad can meet us in person to talk through the problem, the current tools and the options. For companies elsewhere in Gujarat and India we run the same sessions over video calls and follow up with a written summary.",
+    reading: ["custom-vs-ready-made-software", "when-to-build-custom-software", "choose-software-company", "custom-software-cost"],
+    faqs: [
+      { q: "Will you just recommend building custom software?", a: "No. If an existing product does the job, we will say so. Custom software makes sense only when your workflow does not fit the ready-made options, and we explain why either way." },
+      { q: "What do we get at the end of a consultation?", a: "A written summary of the options, our recommendation and, where you are going ahead, a scope for the first version that you can use with us or with another team." },
+      { q: "Can you review a proposal or quote from another company?", a: "Yes. We can read through a proposal and tell you what is clear, what is missing and which questions to ask before you sign." },
+      { q: "Can you assess our existing website or software?", a: "Yes. We review its speed, structure, code and day-to-day use, and tell you what is worth keeping, what to fix first and whether a rebuild is justified." },
+      { q: "Do you offer IT consulting outside Ahmedabad?", a: "Yes. Sessions run over video calls for businesses across Gujarat and India, with in-person meetings available in Ahmedabad." },
     ],
     projects: [],
   },

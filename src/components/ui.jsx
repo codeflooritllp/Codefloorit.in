@@ -170,7 +170,7 @@ export function Ambient() {
   );
 }
 
-export function CtaBand({ title = "Have an idea? Let's build it.", sub = "Tell us about your project, business challenge or technology requirements." }) {
+export function CtaBand({ title = "Have an idea? Let's build it.", sub = "Tell us about your project, business challenge or technology requirements.", cta = "Let's Build Something" }) {
   const pointer = usePointerVars();
   return (
     <section className="cta dark" ref={pointer}>
@@ -181,7 +181,7 @@ export function CtaBand({ title = "Have an idea? Let's build it.", sub = "Tell u
         <h2>{title}</h2>
         <p>{sub}</p>
         <div className="actions actions--center">
-          <Btn to="/contact" magnetic arrow>Let's Build Something</Btn>
+          <Btn to="/contact" magnetic arrow>{cta}</Btn>
           <Btn to="/work" variant="ghost">Explore Our Work</Btn>
         </div>
       </Reveal>

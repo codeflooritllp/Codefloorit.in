@@ -75,6 +75,32 @@ const GLYPHS = {
       <path className="g-l g-l--w" d="M115 76 l6 6 l12 -13" />
     </>,
   ],
+  "ui-ux-design": [
+    <>
+      <rect className="g-a" x="14" y="14" width="132" height="84" rx="12" />
+      <rect className="g-a g-dash" x="26" y="28" width="48" height="56" rx="8" />
+      <path className="g-l" d="M34 44 h32 M34 56 h24" />
+    </>,
+    <>
+      <rect className="g-w g-edge" x="86" y="28" width="48" height="56" rx="8" />
+      <rect className="g-b" x="94" y="38" width="32" height="12" rx="6" />
+      <rect className="g-c" x="94" y="56" width="22" height="7" rx="3.5" />
+      <rect className="g-v" x="94" y="68" width="16" height="8" rx="4" />
+      <path className="g-l g-l--b" d="M76 56 h8 m-4 -4 l4 4 l-4 4" />
+    </>,
+  ],
+  "it-consulting": [
+    <>
+      <rect className="g-a" x="14" y="18" width="132" height="72" rx="12" />
+      <path className="g-l" d="M28 36 h40 M28 48 h30 M28 60 h36" />
+    </>,
+    <>
+      <circle className="g-n" cx="112" cy="54" r="24" />
+      <path className="g-c" d="M112 36 l7 18 l-7 18 l-7 -18 z" />
+      <circle className="g-w" cx="112" cy="54" r="4" />
+      <rect className="g-b" x="28" y="70" width="34" height="12" rx="6" />
+    </>,
+  ],
 };
 
 export default function ServiceGlyph({ slug }) {

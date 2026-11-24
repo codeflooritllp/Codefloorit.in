@@ -1,16 +1,18 @@
-// Brand intro, loaded as a file (not inline) because the CSP in vercel.json is script-src 'self'.
+// Brand intro: the markup and the html.has-intro class are in the prerendered homepage
+// (scripts/prerender.mjs), and its timeline is CSS. This file only lets any key, click, wheel or
+// touch skip it, and removes it when it has played. Loaded async, so it never blocks rendering;
+// timings are measured from the start of the page load, since this may run a little late.
 (function () {
   try {
-    var h = document.documentElement;
-    if (location.pathname !== "/" || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    h.classList.add("has-intro");
-    document.body.insertAdjacentHTML(
-      "afterbegin",
-      '<div class="intro" aria-hidden="true"><div class="intro__light"></div><div class="intro__mark">' +
-        '<div class="intro__logo"><img src="/logo.webp" width="384" height="172" alt="" decoding="sync" fetchpriority="high" /></div>' +
-        '<p class="intro__name">CODEFLOOR IT</p><p class="intro__tag">Build <i>&bull;</i> Innovate <i>&bull;</i> Transform</p></div></div>'
-    );
-    var el = document.body.firstElementChild, ev = ["pointerdown", "keydown", "wheel", "touchstart"], t;
+    var h = document.documentElement, el = document.querySelector(".intro");
+    if (!el) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.remove();
+      h.classList.remove("has-intro");
+      return;
+    }
+    var ev = ["pointerdown", "keydown", "wheel", "touchstart"], t;
+    var at = function (ms) { return Math.max(0, ms - performance.now()); };
     var done = function () {
       ev.forEach(function (e) { removeEventListener(e, skip, true); });
       el.remove();
@@ -22,8 +24,8 @@
       t = setTimeout(done, 400);
     };
     ev.forEach(function (e) { addEventListener(e, skip, { capture: true, passive: true }); });
-    t = setTimeout(done, 2600);
+    t = setTimeout(done, at(2600));
     // the hero's entrance is offset while .has-intro is set; drop it once that entrance has finished
-    setTimeout(function () { h.classList.remove("has-intro", "intro-skip"); }, 4300);
+    setTimeout(function () { h.classList.remove("has-intro", "intro-skip"); }, at(4300));
   } catch {}
 })();

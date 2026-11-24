@@ -1,9 +1,11 @@
-import { Check, Mail, MessageCircle, Phone } from "lucide-react";
-import { CONTACT, PROCESS, WHY, whatsappLink } from "../data/site";
+import { Check, Mail, MessageCircle, Phone, Quote } from "lucide-react";
+import { CONTACT, PACKAGES, PRICING_TERMS, PROCESS, WHY, whatsappLink } from "../data/site";
+import { testimonials } from "../data/testimonials";
 import { techGroups } from "../data/tech";
 import { useEffect, useRef } from "react";
+import { Link } from "react-router";
 import { canAnimate, useScrollProgress } from "../lib/motion";
-import { Ambient, Reveal, SectionHeading } from "./ui";
+import { Ambient, Btn, Reveal, SectionHeading } from "./ui";
 import ContactForm from "./ContactForm";
 import { StageArt } from "./Illustrations";
 import { ZoomIn } from "./scenes";
@@ -205,6 +207,78 @@ export function ContactSection({ heading = true, title = "Have an Idea? Let's Bu
           <ContactForm />
         </Reveal>
       </ZoomIn>
+    </section>
+  );
+}
+
+/** Website packages (data/site.js). Only confirmed fields are shown: anything left null there
+    stays off the page. Each CTA preselects the matching service on the contact form. */
+export function PricingSection() {
+  return (
+    <section className="section" id="pricing" data-robot="point">
+      <div className="container">
+        <SectionHeading
+          center
+          eyebrow="Pricing"
+          title="Clear, published prices"
+          sub="Website packages with a fixed price, and custom quotes for software. The exact pages, features and timeline are confirmed in your written quote before work starts."
+        />
+        <div className="grid grid--3 prices">
+          {PACKAGES.map((p, i) => {
+            const quoted = !p.price.startsWith("₹");
+            const facts = [p.pages, p.timeline, p.support && `Support: ${p.support}`].filter(Boolean);
+            return (
+              <Reveal as="article" key={p.name} delay={i * 90} className={`card spot price ${p.featured ? "price--featured" : ""}`}>
+                <h3>{p.name}</h3>
+                <p className="price__amt">{p.price}</p>
+                {p.gst && <p className="price__gst">{p.gst}</p>}
+                {facts.length > 0 && <p className="price__facts">{facts.join(" · ")}</p>}
+                <p className="price__for">{p.for}</p>
+                {p.features?.length > 0 && (
+                  <ul className="checks">
+                    {p.features.map((f) => (
+                      <li key={f}><Check size={16} aria-hidden="true" /> {f}</li>
+                    ))}
+                  </ul>
+                )}
+                <Btn to={`/contact?service=${p.service}`} variant={p.featured ? "primary" : "outline"} arrow>
+                  {quoted ? "Request a Custom Quote" : "Get a Free Quote"}
+                  <span className="sr-only"> for {p.name}</span>
+                </Btn>
+              </Reveal>
+            );
+          })}
+        </div>
+        <p className="prices__note">
+          Payment terms: {PRICING_TERMS.payment} Prices are in Indian rupees.
+          <br />
+          Need something different? <Link to="/contact">Get a custom quotation</Link>.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/** Client testimonials (data/testimonials.js). Renders nothing until a real, approved one is added. */
+export function Testimonials() {
+  if (!testimonials.length) return null;
+  return (
+    <section className="section tint" data-robot="idle">
+      <div className="container">
+        <SectionHeading eyebrow="Clients" title="What our clients say" />
+        <div className="grid grid--3">
+          {testimonials.map((t, i) => (
+            <Reveal as="figure" key={t.name} delay={i * 90} className="card spot quote">
+              <Quote size={24} aria-hidden="true" className="quote__mark" />
+              <blockquote><p>{t.quote}</p></blockquote>
+              <figcaption>
+                {t.photo && <img src={t.photo} width="48" height="48" alt="" loading="lazy" decoding="async" />}
+                <span><strong>{t.name}</strong>{t.role ? `, ${t.role}` : ""}<br />{t.company}</span>
+              </figcaption>
+            </Reveal>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

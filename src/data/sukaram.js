@@ -1,4 +1,4 @@
-import { CONTACT, HOME_FAQ, PROCESS, whatsappLink } from "./site.js";
+import { CONTACT, HOME_FAQ, PACKAGES, PROCESS, whatsappLink } from "./site.js";
 import { services } from "./services.js";
 import { projects } from "./projects.js";
 
@@ -197,8 +197,8 @@ export function reply(node) {
   }
   if (kind === "pricing") {
     return {
-      text: `I can't quote prices, timelines or guarantees — they depend on what you need. ${FAQ_START.a}`,
-      links: [{ to: "/insights/business-website-cost-india", label: "What a business website costs in India" }, TO.contact],
+      text: `Our website packages: ${PACKAGES.map((p) => `${p.name} ${/\d/.test(p.price) ? `${p.price}${p.pages ? ` for ${p.pages}` : ""}${p.gst ? `, ${p.gst}` : ""}` : `(${p.price.toLowerCase()})`}`).join("; ")}. I can't promise timelines or guarantees — they depend on what you need. ${FAQ_START.a}`,
+      links: [{ to: "/services#pricing", label: "See pricing" }, { to: "/insights/business-website-cost-india", label: "What a business website costs in India" }, TO.contact],
       options: [START, BACK],
     };
   }

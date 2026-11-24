@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, startTransition } from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 import "@fontsource-variable/inter/wght.css";
@@ -35,5 +35,7 @@ if (canAnimate() && finePointer()) initSmoothScroll();
 trackClicks();
 
 // Production pages are prerendered (scripts/prerender.mjs) and hydrated; dev starts empty.
-if (root.firstElementChild) hydrateRoot(root, app);
+// As a transition, hydration yields to the browser every few milliseconds instead of running
+// as one long task, so taps and paints during load are not blocked (TBT, INP).
+if (root.firstElementChild) startTransition(() => hydrateRoot(root, app));
 else createRoot(root).render(app);

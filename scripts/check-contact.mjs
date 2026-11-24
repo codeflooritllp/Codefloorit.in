@@ -30,7 +30,7 @@ async function call({ method = "POST", body, raw, headers = {}, ip = `10.0.0.${+
   return res;
 }
 
-const valid = { name: "Asha Patel", email: "asha@example.com", phone: "+91 98765 43210", company: "Patel Traders", service: "E-commerce Development", details: "We want an online store for about 200 products." };
+const valid = { name: "Asha Patel", email: "asha@example.com", phone: "+91 98765 43210", company: "Patel Traders", service: "E-commerce Development", budget: "Under ₹25,000", details: "We want an online store for about 200 products." };
 const mails = () => outbox.length;
 const results = [];
 async function check(name, fn) {
@@ -85,6 +85,9 @@ await check("empty or whitespace-only message: 422 on details", async () => {
 await check("over-long field: 422", async () => {
   assert.ok((await call({ body: { ...valid, name: "A".repeat(150) } })).body.errors.name);
 });
+await check("over-long budget: 422 (budget is optional, but still bounded)", async () => {
+  assert.ok((await call({ body: { ...valid, budget: "9".repeat(60) } })).body.errors.budget);
+});
 await check("honeypot filled: 200 so bots learn nothing, but no email", async () => {
   const before = mails();
   const r = await call({ body: { ...valid, website: "http://spam.example" } });
@@ -108,6 +111,7 @@ await check("valid enquiry: 200, one plain-text email to CONTACT_TO_EMAIL with r
   assert.equal(m.replyTo.address, "asha@example.com");
   assert.equal(m.html, undefined);
   assert.match(m.text, /Patel Traders/);
+  assert.match(m.text, /Budget: Under ₹25,000/);
 });
 await check("Vercel's pre-parsed req.body is accepted too", async () => {
   assert.equal((await call({ body: valid, vercelBody: { ...valid, details: valid.details + " Second store." } })).statusCode, 200);

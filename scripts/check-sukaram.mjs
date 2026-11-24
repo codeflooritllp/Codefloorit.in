@@ -38,7 +38,9 @@ const walk = (node) => {
 [...SUGGESTIONS, ...Object.values(HINTS)].forEach((s) => walk(s.node));
 ["unknown", "pricing", "me", "after", "hello", "thanks", "bye"].forEach(walk);
 assert.match(reply("unknown").text, /not completely sure/);
-assert.doesNotMatch(reply("pricing").text, /[₹$]\s?\d|\d+\s?(days|weeks|months)/);
+// prices only as published in PACKAGES (data/site.js); never a timeline
+assert.match(reply("pricing").text, /₹15,999/);
+assert.doesNotMatch(reply("pricing").text, /\d+\s?(days|weeks|months)/);
 
 // hero introduction: lists exactly the site's services and ends on three real pages
 const routes = NAV.map((n) => n.to);

@@ -85,6 +85,81 @@ export const HOME_FAQ = [
   },
   {
     q: "How much does a website or software project cost?",
-    a: "It depends on scope: how many pages and how much content, custom features such as booking or online payments, whether your team needs to edit the site, and how much design work is involved. We do not publish fixed prices. Tell us what you need and we will give you an honest estimate. Our article on business website costs in India explains the main cost drivers.",
+    a: "It depends on scope: how many pages and how much content, custom features such as booking or online payments, whether your team needs to edit the site, and how much design work is involved. Our Starter Website package (5–10 pages) is ₹15,999 and our Business Website package (10–15 pages) is ₹26,999, both GST included (see Pricing on the Services page); web applications and custom software are quoted after we understand the scope. Tell us what you need and we will give you an honest estimate. Our article on business website costs in India explains the main cost drivers.",
+  },
+  {
+    q: "Do you work with clients outside India?",
+    a: "Yes. Planning, design reviews and progress updates all run over video calls, email and WhatsApp, so we can work with businesses outside India the same way we work with clients across the country. Our package prices are in Indian rupees; for international projects we agree the scope and quote individually.",
+  },
+];
+
+/* Website packages. Confirmed by the owner on 2026-11-24: names, prices, GST included, page
+   ranges and the payment terms below. Fields left null (timeline, support, website features)
+   are not confirmed and are not shown on the site. Fill them in here once approved, e.g.
+     timeline: "2–3 weeks"   support: "30 days after launch"   features: ["...", "..."]       */
+export const PACKAGES = [
+  {
+    name: "Starter Website",
+    price: "₹15,999",
+    for: "Small businesses, professionals and new ventures that need a professional website.",
+    gst: "GST included",
+    pages: "5–10 pages",
+    features: null,
+    timeline: null,
+    support: null,
+    service: "business-website-development",
+  },
+  {
+    name: "Business Website",
+    price: "₹26,999",
+    for: "Established businesses that want their website to present their services and bring in enquiries.",
+    gst: "GST included",
+    pages: "10–15 pages",
+    features: null,
+    timeline: null,
+    support: null,
+    service: "business-website-development",
+    featured: true,
+  },
+  {
+    name: "Custom Web Application",
+    price: "Custom quote",
+    for: "Businesses that need portals, dashboards, booking systems or software built around their workflow.",
+    pages: null,
+    // how every custom project is run (see PROCESS), not a list of deliverables
+    features: [
+      "Discovery of your workflow, users and requirements",
+      "Scope, milestones and price agreed before the build starts",
+      "Built and reviewed in working increments",
+    ],
+    timeline: null,
+    support: null,
+    service: "web-application-development",
+  },
+];
+
+/* Shared commercial terms, confirmed 2026-11-24. */
+export const PRICING_TERMS = {
+  payment: "50% advance, 30% at the development milestone and 20% before final launch.",
+};
+
+/* Founder and team profiles for the About page. Add only real people, with their approval,
+   and only facts they have confirmed (no invented experience, qualifications or photos).
+   The section stays hidden while this list is empty.
+     { name: "Full name", role: "Founder", bio: "One or two sentences", photo: "/team/<file>.webp (optional)" } */
+export const TEAM = [
+  {
+    name: "Shreyansh Kharadi",
+    role: "Founder & Designated Partner",
+    bio: "Shreyansh Kiritbhai Kharadi founded Codefloor IT Tech LLP to help businesses use technology to simplify operations, improve efficiency and find new room to grow. He works hands-on in web development and believes technology should solve real problems for the business, not just look impressive.",
+    expertise: [
+      "Website and web application development",
+      "Custom software solutions",
+      "Business process automation",
+      "UI/UX and digital product development",
+      "SaaS product development",
+      "Technology strategy",
+    ],
+    quote: "Don't just build technology. Build solutions that move businesses forward.",
   },
 ];

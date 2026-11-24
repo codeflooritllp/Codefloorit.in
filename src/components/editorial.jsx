@@ -145,6 +145,7 @@ export function HorizontalShowcase({ projects }) {
               </p>
               <div className="pcard__meta">
                 <span>{p.category}</span>
+                {p.origin && <span className="status status--origin">{p.origin}</span>}
                 <StatusBadge status={p.status} />
               </div>
               <h2 className="hshow__title">{p.title}</h2>

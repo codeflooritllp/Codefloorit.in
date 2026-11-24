@@ -2,6 +2,7 @@
    its own <head> tags (so content is crawlable without JavaScript) and writes sitemap.xml
    and llms.txt (a plain-text index of the same pages, from the same titles and descriptions). */
 import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -11,16 +12,44 @@ const { render, routes, SITE_URL } = await import(pathToFileURL(resolve(root, "d
 
 // preload the two latin fonts: otherwise they are found only after the CSS is parsed, and text repaints late
 const fonts = readdirSync(dist("assets")).filter((f) => /^(inter|space-grotesk)-latin-wght-normal-.*\.woff2$/.test(f));
+
+/* BOOT: the pages are complete prerendered HTML, so the JavaScript only adds interactivity. It
+   starts downloading just after the first paint instead of with the HTML: on a phone network the
+   ~170 KB of modules otherwise compete with the page and its fonts for bandwidth and delay the first
+   paint. A tiny deferred file (the CSP blocks inline scripts) adds the entry module and its preloads
+   once the parser is done and a frame has been painted. */
+const viteHtml = readFileSync(dist("index.html"), "utf8");
+const entry = viteHtml.match(/<script type="module" crossorigin src="([^"]+)"><\/script>/)[1];
+const preloads = [...viteHtml.matchAll(/<link rel="modulepreload" crossorigin href="([^"]+)">/g)].map((m) => m[1]);
+const boot = `(function(){var go=function(){if(go.done)return;go.done=1;var h=document.head;${JSON.stringify(preloads)}.forEach(function(u){var l=document.createElement("link");l.rel="modulepreload";l.crossOrigin="";l.href=u;h.appendChild(l)});var s=document.createElement("script");s.type="module";s.crossOrigin="";s.src=${JSON.stringify(entry)};h.appendChild(s)};if(document.visibilityState==="hidden")go();else{requestAnimationFrame(function(){setTimeout(go,0)});setTimeout(go,1500)}})();
+`;
+const bootFile = `boot-${createHash("sha256").update(boot).digest("hex").slice(0, 8)}.js`;
+writeFileSync(dist(`assets/${bootFile}`), boot);
 const template = readFileSync(dist("index.html"), "utf8")
   .replace(
     "</head>",
     () => fonts.map((f) => `  <link rel="preload" href="/assets/${f}" as="font" type="font/woff2" crossorigin />\n`).join("") + "  </head>"
   )
-  // Vite hoists the entry module into <head>. Modules are deferred by spec already; the explicit
-  // attribute changes nothing in browsers but stops SEO scanners reporting it as render-blocking.
-  // (Not async: that could run the bundle before #root is parsed and break hydration.)
-  .replace(/<script type="module" (?!defer)/g, '<script type="module" defer ');
+  // the app's JavaScript starts loading after the first paint (see BOOT below)
+  .replace(/\s*<script type="module" crossorigin src="[^"]+"><\/script>|\s*<link rel="modulepreload" crossorigin href="[^"]+">/g, "")
+  .replace("</head>", () => `  <script src="/assets/${bootFile}" defer></script>
+  </head>`)
+  // Inline the stylesheet: as a separate file it is a render-blocking request, which on a phone
+  // network delays the first paint by a whole round trip. (The CSP allows inline styles.) The file
+  // stays linked but `disabled`: a disabled stylesheet is neither downloaded nor applied, and the link
+  // is how Vite's loader sees it is already on the page, so lazy chunks that list it do not add it again.
+  .replace(
+    /<link rel="stylesheet" crossorigin href="(\/assets\/([^"]+\.css))">/,
+    (_, href, f) => `<style>${readFileSync(dist(`assets/${f}`), "utf8")}</style>
+    <link rel="stylesheet" href="${href}" disabled />`
+  );
 const pages = [];
+
+/* The brand intro on the homepage, in the HTML itself so it paints with the first frame. Its
+   timeline is CSS ("Intro" in src/styles/index.css; hidden with reduced motion); public/intro.js
+   only adds skip-on-input and removes it afterwards, so it loads async and blocks nothing. */
+const INTRO = `<div class="intro" aria-hidden="true"><div class="intro__light"></div><div class="intro__mark"><div class="intro__logo"><img src="/logo.webp" width="384" height="172" alt="" decoding="sync" fetchpriority="high" /></div><p class="intro__name">CODEFLOOR IT</p><p class="intro__tag">Build <i>&bull;</i> Innovate <i>&bull;</i> Transform</p></div></div>
+    <script src="/intro.js" async></script>`;
 const unesc = (s) =>
   s.replace(/&quot;/g, '"').replace(/&#x27;|&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&");
 
@@ -46,9 +75,11 @@ const mainText = (html) => {
 
 for (const route of [...routes, "/404"]) {
   const { html, head } = await render(route);
-  const page = template
+  let page = template
     .replace(/<!--seo-->[\s\S]*<!--\/seo-->/, () => head)
+    .replace("<!--intro-->", () => (route === "/" ? INTRO : ""))
     .replace("<!--app-->", () => html);
+  if (route === "/") page = page.replace('<html lang="en">', '<html lang="en" class="has-intro">');
   if (route !== "/404") {
     const title = unesc(head.match(/<title>([^<]*)/)[1]);
     const description = unesc(head.match(/name="description" content="([^"]*)/)[1]);

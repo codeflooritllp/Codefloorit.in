@@ -718,8 +718,13 @@ function morph(scene) {
 const SCENES = { cluster, laptop, hexes, windows, rings, morph };
 const CAMERA_Z = { cluster: 17, laptop: 11, hexes: 19, windows: 15, rings: 22, morph: 17 };
 
-/** Mounts a scene on the canvas. Returns { start, stop, dispose }, or null without WebGL. */
-export function mount(canvas, kind) {
+/* Lets the browser paint and handle input between the heavy setup steps below, so setting up a
+   scene is several short tasks instead of one long one that would block taps and scrolling. */
+const yieldToMain = () => new Promise((r) => setTimeout(r, 0));
+
+/** Mounts a scene on the canvas. Resolves to { start, stop, dispose }, or null without WebGL
+    or GPU acceleration. */
+export async function mount(canvas, kind) {
   let renderer;
   try {
     // morph is soft additive points: multisampling a full-screen canvas buys it nothing
@@ -727,9 +732,19 @@ export function mount(canvas, kind) {
   } catch {
     return null;
   }
+  // no GPU acceleration (SwiftShader, llvmpipe, Microsoft Basic Render): WebGL runs on the CPU and
+  // the scene would freeze the page for seconds, so leave the canvas empty, as on phones
+  const gl = renderer.getContext();
+  const info = gl.getExtension("WEBGL_debug_renderer_info");
+  if (info && /swiftshader|llvmpipe|softpipe|software|basic render/i.test(gl.getParameter(info.UNMASKED_RENDERER_WEBGL))) {
+    renderer.dispose();
+    renderer.forceContextLoss();
+    return null;
+  }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
   renderer.toneMapping = ACESFilmicToneMapping;
   renderer.debug.checkShaderErrors = false; // skips a compile-status round trip and the driver's precision chatter
+  await yieldToMain();
 
   const scene = new Scene();
   // reflections for the glossy scenes; morph is only points and skips the (~0.5s) environment bake
@@ -737,6 +752,7 @@ export function mount(canvas, kind) {
   if (pmrem) {
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environmentIntensity = 0.55; // keep brand colours saturated instead of washed out
+    await yieldToMain();
   }
   const sun = new DirectionalLight(0xffffff, 2.2);
   sun.position.set(4, 7, 8);
@@ -745,6 +761,9 @@ export function mount(canvas, kind) {
   const camera = new PerspectiveCamera(30, 1, 0.1, 100);
   camera.position.set(0, 0, CAMERA_Z[kind] ?? 17);
   const update = (SCENES[kind] ?? cluster)(scene);
+  await yieldToMain();
+  // compile the shaders off the main thread where the driver allows it, so the first frame does not stall
+  await renderer.compileAsync(scene, camera).catch(() => {});
 
   const size = () => {
     const w = canvas.clientWidth;

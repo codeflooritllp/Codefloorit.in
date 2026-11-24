@@ -113,6 +113,7 @@ export function ProjectCard({ project, index }) {
       <div className="pcard__body">
         <div className="pcard__meta">
           <span>{project.category}</span>
+          {project.origin && <span className="status status--origin">{project.origin}</span>}
           <StatusBadge status={project.status} />
         </div>
         <h3>
