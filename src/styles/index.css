@@ -616,6 +616,14 @@ a.alink:hover svg, .card:hover span.alink svg { transform: translateX(4px); }
 /* the highlighted words get a cyan-to-violet gradient from per-letter colour: background-clip
    text on 15 separate letters would repaint each of them every frame (see .grad below) */
 .hd__c--g { color: color-mix(in oklab, #00d4ff, #a78bff calc(var(--g) * 100%)); }
+/* touch screens: the same rise without the blur. A blur filter cannot run on the compositor,
+   so ~30 blurred letters re-rasterise every frame of the entrance on a phone CPU */
+@media (max-width: 899px), (hover: none) {
+  .hd__c { animation-name: char-in-m; }
+  .hero__title .sw > span { animation-name: word-up-m; }
+}
+@keyframes char-in-m { from { transform: translateY(0.5em) rotate(8deg); opacity: 0.15; } }
+@keyframes word-up-m { from { transform: translateY(0.45em); } }
 /* split headline words keep the gradient but not the sheen or glow, which repaint every frame */
 .hero__title .grad { animation: none; text-shadow: none; }
 
@@ -2671,6 +2679,10 @@ body::after {
 
 html.has-intro { --intro: 2s; }
 html.intro-skip { --intro: 0s; }
+@media (prefers-reduced-motion: reduce) {
+  .intro { display: none; }
+  html.has-intro { --intro: 0s; }
+}
 
 .intro {
   position: fixed;
